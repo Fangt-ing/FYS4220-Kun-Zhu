@@ -22,5 +22,15 @@ set_location_assignment PIN_D14 -to led[7]
 set_location_assignment PIN_A11 -to led[8]
 set_location_assignment PIN_B11 -to led[9]
 
+# 7-segment
+set_location_assignment PIN_c14 -to sevenled[0]
+set_location_assignment PIN_e15 -to sevenled[1]
+set_location_assignment PIN_c15 -to sevenled[2]
+set_location_assignment PIN_c16 -to sevenled[3]
+set_location_assignment PIN_e16 -to sevenled[4]
+set_location_assignment PIN_d17 -to sevenled[5]
+set_location_assignment PIN_c17 -to sevenled[6]
+set_location_assignment PIN_d15 -to sevenled[7]
+
 #To avoid that the FPGA is driving an unintended value on pins that are not in use:
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"

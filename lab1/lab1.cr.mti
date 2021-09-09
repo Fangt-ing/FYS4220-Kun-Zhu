@@ -1,0 +1,30 @@
+D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd {0 {vcom -work work -2002 -explicit -stats=none D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity tCounter
+-- Compiling architecture rtl of tCounter
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(14): (vcom-1294) Declaration with designator "clk" already exists in this region.
+** =====> Prior declaration of "clk" is at D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(7).
+** Warning: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(15): (vcom-1207) An abstract literal and an identifier must have a separator between them.
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(23): (vcom-1136) Unknown identifier "bit_hoder".
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(23): Type error resolving infix expression "+" as type ieee.NUMERIC_STD.UNSIGNED.
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(25): (vcom-1093) EXIT and NEXT statements must be inside of a LOOP statement.
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter.vhd(37): VHDL Compiler exiting
+
+} {9.0 10.0 12.0 16.0} {}} D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter_tb.vhd {0 {vcom -work work -2002 -explicit -stats=none D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity tCounter_tb
+-- Compiling architecture rtl of tCounter_tb
+** Warning: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter_tb.vhd(19): (vcom-1207) An abstract literal and an identifier must have a separator between them.
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter_tb.vhd(23): Signal "counter" is type ieee.NUMERIC_STD.UNSIGNED; expecting type ieee.std_logic_1164.STD_LOGIC_VECTOR.
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter_tb.vhd(26): near "=": (vcom-1576) expecting == or '+' or '-' or '&'.
+** Error: D:/ProgramData/GitHub/FYS4220-Kun-Zhu/lab1/tests/tCounter_tb.vhd(31): VHDL Compiler exiting
+
+} {10.0 13.0} {}}
