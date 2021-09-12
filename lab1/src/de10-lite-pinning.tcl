@@ -11,8 +11,8 @@ set_location_assignment PIN_B14 -to sw[8]
 set_location_assignment PIN_F15 -to sw[9]
 
 # push button
-set_location_assignment PIN_B8 -to key[0]
-set_location_assignment PIN_A7 -to key[1]
+set_location_assignment PIN_B8 -to reset
+set_location_assignment PIN_A7 -to click
 
 #LED outputs
 set_location_assignment PIN_A8 -to led[0]
