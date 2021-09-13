@@ -51,7 +51,6 @@ set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS "AS INPUT TRI-STATED"
 set_global_assignment -name RESERVE_ALL_UNUSED_PINS_NO_OUTPUT_GND "AS INPUT TRI-STATED"
 set_global_assignment -name VHDL_FILE src/counter.vhd
-set_global_assignment -name VHDL_FILE src/test.vhd
 set_global_assignment -name VHDL_FILE src/seven.vhd
 set_global_assignment -name TCL_SCRIPT_FILE "src/de10-lite-pinning.tcl"
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
