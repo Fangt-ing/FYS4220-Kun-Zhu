@@ -21,14 +21,15 @@ architecture rtl of counter is
   signal counting : unsigned(3 downto 0) := "0000";
 
 begin
-  the_register : process (clk, click)
+  the_register : process (clk)
   begin
     if rising_edge(clk) then
-      holder <= holder(1 downto 0) & (not click);
+      holder <= holder(1 downto 0) & click;
     end if;
   end process;
 
-  the_counter : process (clk, click, reset)
+  the_counter : process (clk, reset) --click is not needed for sensitivity list, as click will comsume CPU resources
+  -- reset as asynchronous, every time 'reset' is pushed, the process will be re-evaluated.
   begin
     if reset = '0' then
       counting <= "0000";

@@ -10,6 +10,9 @@ set_location_assignment PIN_A14 -to sw[7]
 set_location_assignment PIN_B14 -to sw[8]
 set_location_assignment PIN_F15 -to sw[9]
 
+# clock
+set_location_assignment PIN_p11 -to clk
+
 # push button
 set_location_assignment PIN_B8 -to reset
 set_location_assignment PIN_A7 -to click
