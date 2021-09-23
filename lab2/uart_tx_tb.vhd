@@ -10,10 +10,10 @@ architecture bench of uart_tx_tb is
   component uart_tx
     port (
       clk           : in std_logic;
-      arst_n        : in std_logic;
-      tx_data       : in std_logic_vector (7 downto 0);
-      tx_data_valid : in std_logic;
-      tx_busy       : out std_logic;
+      arst_n        : in std_logic                     := '0';
+      tx_data       : in std_logic_vector (7 downto 0) := "00000000";
+      tx_data_valid : in std_logic                     := '0';
+      tx_busy       : out std_logic                    := '0';
       tx            : out std_logic
     );
   end component;
@@ -52,12 +52,12 @@ begin
     tx_data_valid <= '1';
     wait for clk_period * 10;
     tx_data_valid <= '0';
-    wait for clk_period * 424;
+    wait for clk_period * 4330;
 
     tx_data_valid <= '1';
     wait for clk_period * 5;
     tx_data_valid <= '0';
-    wait for clk_period * 434;
+    wait for clk_period * 4335;
 
     arst_n  <= '0';
     clk_ena <= false;

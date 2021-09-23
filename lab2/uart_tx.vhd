@@ -32,7 +32,7 @@ architecture rtl of uart_tx is
   signal utx_data  : unsigned(7 downto 0) := (others => '0');
 begin
 
-  tx_process : process (clk, tx_data_valid, arst_n) is
+  tx_process : process (clk, arst_n) is
   begin
     if rising_edge(clk) then
       case tx_state is
@@ -51,7 +51,7 @@ begin
           tx_busy  <= '1';
           tx       <= tx_buffer(to_integer(bit_cnt));
           baud_cnt <= baud_cnt + 1;
-          if arst_n = '0' then
+          if arst_n = '1' then
             tx_state <= SIdle;
           elsif to_integer(baud_cnt) = bit_period then
             baud_cnt <= "000000000";
