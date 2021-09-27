@@ -19,3 +19,4 @@ add wave -noupdate -divider tx_state
 
 add wave uart_tx_tb/tx_busy
 add wave uart_tx_tb/tx
+add wave uart_tx_tb/rx_buffer
