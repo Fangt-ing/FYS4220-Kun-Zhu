@@ -11,7 +11,7 @@ architecture bench of uart_tx_tb is
     port (
       clk           : in std_logic;
       arst_n        : in std_logic                     := '0';
-      tx_data       : in std_logic_vector (7 downto 0) := "00000000";
+      tx_data       : in std_logic_vector (7 downto 0) := "01111010";
       tx_data_valid : in std_logic                     := '0';
       tx_busy       : out std_logic                    := '0';
       tx            : out std_logic
@@ -24,12 +24,12 @@ architecture bench of uart_tx_tb is
 
   -- Ports
   signal clk           : std_logic;
-  signal arst_n        : std_logic := '0';
-  signal tx_data       : std_logic_vector (7 downto 0);
+  signal arst_n        : std_logic                     := '0';
+  signal tx_data       : std_logic_vector (7 downto 0) := "11001011";
   signal tx_data_valid : std_logic;
   signal tx_busy       : std_logic;
   signal tx            : std_logic;
-
+  -- signal tx_buffer : std_logic_vector(9 downto 0) := '1' & tx_data & '0';
   signal clk_ena : boolean := false;
 begin
 
@@ -47,28 +47,29 @@ begin
 
   stimuli_process : process
   begin
+    -- initialize the clk signal.
     clk_ena <= true;
-    wait for clk_period;
-    tx_data_valid <= '1';
     wait for clk_period * 10;
-    tx_data_valid <= '0';
-    wait for clk_period * 4330;
 
+    -- enable the tx_data transmission.
     tx_data_valid <= '1';
-    wait for clk_period * 5;
+    tx            <= '1'; -- the first/ starting bit of sending is assigned.
+    wait for clk_period * 434; -- wait for one bit_period.
     tx_data_valid <= '0';
-    wait for clk_period * 4335;
+
+    -- assigned the test tx data to send.
+    for i in 0 to 7 loop
+      tx <= tx_data(i);
+      wait for clk_period * 434;
+    end loop;
+    
+    tx            <= '0'; -- the last/ stop bit of sending is assigned.
+    tx_data_valid <= '0'; -- transmission disabled.
+    wait for clk_period * 434;
 
     arst_n  <= '0';
     clk_ena <= false;
     wait;
   end process;
-  --   clk_process : process
-  --   begin
-  --   clk <= '1';
-  --   wait for clk_period/2;
-  --   clk <= '0';
-  --   wait for clk_period/2;
-  --   end process clk_process;
 
 end architecture;

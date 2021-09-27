@@ -21,7 +21,7 @@ architecture rtl of uart_rx is
 
   signal rx_state : state_type;
 
-  signal baud_cnt : unsigned(8 downto 0) := "000000000";
+  signal baud_cnt : unsigned(8 downto 0) := "000000000"; -- can be assigned as integer
 
   signal bit_cnt : unsigned(3 downto 0) := "0000"; -- enables the bit to count up in the register
   -- baudrate = 115200 bits/s, then 1 bit period = 1/115200 = 8.68 us
@@ -32,9 +32,11 @@ architecture rtl of uart_rx is
 
 begin
 
-  tx_process : process (clk, arst_n) is
+  rx_process : process (clk, arst_n) is
+    -- variables syncronize with the assinged value simultaneously, signal type does not.
+    -- so the sample values should be made variable instead of signal.
     variable sample1 : std_logic := '1';
-    variable sample2 : std_logic := '1';
+    -- variable sample2 : std_logic := '1'; not necessary.
   begin
     if rising_edge(clk) then
       case rx_state is
@@ -43,19 +45,21 @@ begin
           rx_busy  <= '0';
           baud_cnt <= "000000000";
           bit_cnt  <= "0000";
+          -- sample1  <= '1'; not signal, can't be defined in state.
+          -- sample2  <= '1';
           if rx = '0' then
             rx_state <= SReceive;
+            rx_busy  <= '1';
           end if;
 
         when SReceive =>
-          rx_busy  <= '1';
+          -- rx_busy  <= '1';
           baud_cnt <= baud_cnt + 1;
-          if to_integer(baud_cnt) = 150 then
+          if to_integer(baud_cnt) = bit_period/3 then
             sample1 := rx;
-          end if;
-          if to_integer(baud_cnt) = 300 then
-            sample2 := rx;
-            if sample1 = sample2 then
+          elsif to_integer(baud_cnt) = bit_period * 2/3 then
+            -- sample2 := rx;
+            if sample1 = rx then
               rx_buffer(to_integer(bit_cnt)) <= rx;
             else
               rx_err   <= '1';
@@ -64,17 +68,19 @@ begin
           end if;
 
           if to_integer(baud_cnt) = bit_period then
-            baud_cnt <= "000000000";
-            bit_cnt  <= bit_cnt + 1;
-            if to_integer(bit_cnt) = 10 then
-              rx_state <= SIdle;
-              rx_data  <= rx_buffer(8 downto 0);
-            end if;
+            baud_cnt                     <= "000000000";
+            bit_cnt                      <= bit_cnt + 1;
+            rx_data(to_integer(bit_cnt)) <= rx_buffer(to_integer(bit_cnt) + 1);
+          elsif to_integer(bit_cnt) = 10 then
+            rx_state <= SIdle;
+            -- rx_data  <= rx_buffer(8 downto 1);
+            -- end if;
           end if;
       end case;
     end if;
+
     if arst_n = '1' then
       rx_state <= SIdle;
     end if;
-    end process;
-  end architecture;
+  end process;
+end architecture;

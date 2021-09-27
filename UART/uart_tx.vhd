@@ -38,29 +38,32 @@ begin
       case tx_state is
         when SIdle =>
           tx_busy  <= '0';
-          tx       <= '1';
+          tx       <= '0';
           baud_cnt <= "000000000";
           tx_busy  <= '0';
           bit_cnt  <= "0000";
           if tx_data_valid = '1' then
             tx_buffer <= '1' & tx_data & '0';
             tx_state  <= STransmit;
+            tx_busy   <= '1';
           end if;
 
         when STransmit =>
           tx_busy  <= '1';
           tx       <= tx_buffer(to_integer(bit_cnt));
           baud_cnt <= baud_cnt + 1;
-          if arst_n = '1' then
-            tx_state <= SIdle;
-          elsif to_integer(baud_cnt) = bit_period then
+
+          if to_integer(baud_cnt) = bit_period then
             baud_cnt <= "000000000";
             bit_cnt  <= bit_cnt + 1;
-            if to_integer(bit_cnt) = 10 then
-              tx_state <= SIdle;
-            end if;
+          elsif to_integer(bit_cnt) = 10 then
+            tx_state <= SIdle;
           end if;
       end case;
+    end if;
+
+    if arst_n = '1' then
+      tx_state <= SIdle;
     end if;
   end process;
 end architecture;

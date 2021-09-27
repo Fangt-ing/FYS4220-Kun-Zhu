@@ -48,15 +48,37 @@ begin
   stimuli_process : process
   begin
     clk_ena <= true;
-    wait for clk_period * 2;
+    wait for clk_period * 10;
+
+    -- brings the state machine to rx state for receiving data
+    -- for a normal senario case
     rx <= '0';
-    wait for clk_period * 434;
+    wait for clk_period * 434; -- 434 is one bit period.
 
     for i in 0 to 7 loop
       rx <= rx_test_data(i);
       wait for clk_period * 434;
-      --   null;
-    end loop; -- <name>
+    end loop;
+
+    rx <= '1';
+    wait for clk_period * 434;
+
+    -- arst_n  <= '0';
+    -- clk_ena <= false;
+
+    wait for clk_period * 10;
+
+    -- brings the state machine to rx state for receiving data
+    -- for a normal senario case
+    rx <= '0';
+    wait for clk_period * 434/3; -- 434 is one bit period.
+    rx <= '1';
+    wait for clk_period * 434 *2/3;
+
+    for i in 0 to 7 loop
+      rx <= rx_test_data(i);
+      wait for clk_period * 434;
+    end loop;
 
     rx <= '1';
     wait for clk_period * 434;
@@ -64,14 +86,7 @@ begin
     arst_n  <= '0';
     clk_ena <= false;
     wait;
-  end process;
 
-  --   clk_process : process
-  --   begin
-  --   clk <= '1';
-  --   wait for clk_period/2;
-  --   clk <= '0';
-  --   wait for clk_period/2;
-  --   end process clk_process;
+  end process;
 
 end;
