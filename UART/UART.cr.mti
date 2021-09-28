@@ -1,4 +1,23 @@
-D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_tx.vhd {1 {vcom -work work -2002 -explicit -stats=none D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_tx.vhd
+D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_rx.vhd {1 {vcom -work work -2002 -explicit -stats=none D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_rx.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package MATH_REAL
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity uart_rx
+-- Compiling architecture rtl of uart_rx
+
+} {} {}} D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_rx_tb.vhd {1 {vcom -work work -2002 -explicit -stats=none D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_rx_tb.vhd
+Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+-- Loading package STANDARD
+-- Loading package TEXTIO
+-- Loading package std_logic_1164
+-- Loading package NUMERIC_STD
+-- Compiling entity uart_rx_tb
+-- Compiling architecture bench of uart_rx_tb
+
+} {} {}} D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_tx.vhd {1 {vcom -work work -2002 -explicit -stats=none D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART/uart_tx.vhd
 Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
 -- Loading package STANDARD
 -- Loading package MATH_REAL
