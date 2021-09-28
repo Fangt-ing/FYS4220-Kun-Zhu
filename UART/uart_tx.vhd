@@ -23,7 +23,7 @@ architecture rtl of uart_tx is
 
   signal baud_cnt : unsigned(8 downto 0) := "000000000";
 
-  signal bit_cnt : unsigned(3 downto 0) := "0000"; -- enables the bit to count up in the register
+  -- signal bit_cnt : unsigned(3 downto 0) := "0000"; -- enables the bit to count up in the register
   -- baudrate = 115200 bits/s, then 1 bit period = 1/115200 = 8.68 us
   -- constant bit_period : time := 8.68 us --> bit_period = time/clk = 434 times of changes
   constant bit_period : integer := 434;
@@ -33,6 +33,7 @@ architecture rtl of uart_tx is
 begin
 
   tx_process : process (clk, arst_n) is
+  variable bit_cnt : unsigned(3 downto 0) := "0000";
   begin
     if rising_edge(clk) then
       case tx_state is
@@ -41,7 +42,7 @@ begin
           tx       <= '0';
           baud_cnt <= "000000000";
           tx_busy  <= '0';
-          bit_cnt  <= "0000";
+          bit_cnt  := "0000";
           if tx_data_valid = '1' then
             tx_buffer <= '1' & tx_data & '0';
             tx_state  <= STransmit;
@@ -55,8 +56,9 @@ begin
 
           if to_integer(baud_cnt) = bit_period then
             baud_cnt <= "000000000";
-            bit_cnt  <= bit_cnt + 1;
-          elsif to_integer(bit_cnt) = 10 then
+            bit_cnt  := bit_cnt + 1;
+          end if;
+          if to_integer(bit_cnt) = 10 then
             tx_state <= SIdle;
           end if;
       end case;

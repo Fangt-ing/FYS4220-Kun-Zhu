@@ -24,8 +24,8 @@ architecture bench of uart_tx_tb is
 
   -- Ports
   signal clk           : std_logic;
-  signal arst_n        : std_logic                     := '0';
-  signal tx_data       : std_logic_vector (7 downto 0) := "11001011";
+  signal arst_n        : std_logic := '0';
+  signal tx_data       : std_logic_vector (7 downto 0);
   signal tx_data_valid : std_logic;
   signal tx_busy       : std_logic;
   signal tx            : std_logic;
@@ -52,20 +52,11 @@ begin
     wait for clk_period * 10;
 
     -- enable the tx_data transmission.
+    tx_data <= "11001011";
     tx_data_valid <= '1';
-    tx            <= '1'; -- the first/ starting bit of sending is assigned.
-    wait for clk_period * 434; -- wait for one bit_period.
+    wait for clk_period; -- wait for one bit_period.
     tx_data_valid <= '0';
-
-    -- assigned the test tx data to send.
-    for i in 0 to 7 loop
-      tx <= tx_data(i);
-      wait for clk_period * 434;
-    end loop;
-    
-    tx            <= '0'; -- the last/ stop bit of sending is assigned.
-    tx_data_valid <= '0'; -- transmission disabled.
-    wait for clk_period * 434;
+    wait for clk_period * 434 *11;
 
     arst_n  <= '0';
     clk_ena <= false;

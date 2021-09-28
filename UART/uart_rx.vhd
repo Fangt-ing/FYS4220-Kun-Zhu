@@ -9,7 +9,7 @@ entity uart_rx is
     arst_n  : in std_logic; -- Asynchronous active low reset
     rx      : in std_logic; -- UART TX input
     rx_data : out std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
-    rx_err  : out std_logic; -- Flag incorrect stop or start bit (active high). Reset on new reception
+    rx_err  : out std_logic := '0'; -- Flag incorrect stop or start bit (active high). Reset on new reception
     rx_busy : out std_logic -- Module busy, transmission ongoing (active high)
   );
 end entity;
@@ -21,9 +21,9 @@ architecture rtl of uart_rx is
 
   signal rx_state : state_type;
 
-  signal baud_cnt : unsigned(8 downto 0) := "000000000"; -- can be assigned as integer
+  signal baud_cnt : integer := 0; -- can be assigned as integer
 
-  signal bit_cnt : unsigned(3 downto 0) := "0000"; -- enables the bit to count up in the register
+  signal bit_cnt : integer := 0; -- enables the bit to count up in the register
   -- baudrate = 115200 bits/s, then 1 bit period = 1/115200 = 8.68 us
   -- constant bit_period : time := 8.68 us --> bit_period = time/clk = 434 times of changes
   constant bit_period : integer := 434;
@@ -41,10 +41,10 @@ begin
     if rising_edge(clk) then
       case rx_state is
         when SIdle =>
-          rx_err   <= '0';
+          -- rx_err   <= '0';
           rx_busy  <= '0';
-          baud_cnt <= "000000000";
-          bit_cnt  <= "0000";
+          baud_cnt <= 0;
+          bit_cnt  <= 0;
           -- sample1  <= '1'; not signal, can't be defined in state.
           -- sample2  <= '1';
           if rx = '0' then
@@ -53,28 +53,29 @@ begin
           end if;
 
         when SReceive =>
-          -- rx_busy  <= '1';
+          rx_err   <= '0';
+          rx_busy  <= '1';
           baud_cnt <= baud_cnt + 1;
-          if to_integer(baud_cnt) = bit_period/3 then
+          if baud_cnt = bit_period/3 then
             sample1 := rx;
-          elsif to_integer(baud_cnt) = bit_period * 2/3 then
+          elsif baud_cnt = bit_period * 2/3 then
             -- sample2 := rx;
             if sample1 = rx then
-              rx_buffer(to_integer(bit_cnt)) <= rx;
+              rx_buffer(bit_cnt) <= rx;
             else
               rx_err   <= '1';
               rx_state <= SIdle;
             end if;
           end if;
 
-          if to_integer(baud_cnt) = bit_period then
-            baud_cnt                     <= "000000000";
-            bit_cnt                      <= bit_cnt + 1;
-            rx_data(to_integer(bit_cnt)) <= rx_buffer(to_integer(bit_cnt) + 1);
-          elsif to_integer(bit_cnt) = 10 then
+          if baud_cnt = bit_period then
+            baud_cnt <= 0;
+            bit_cnt  <= bit_cnt + 1;
+            -- rx_data(bit_cnt) <= rx_buffer(bit_cnt + 1);
+          end if;
+          if bit_cnt = 10 then
             rx_state <= SIdle;
-            -- rx_data  <= rx_buffer(8 downto 1);
-            -- end if;
+            rx_data  <= rx_buffer(8 downto 1);
           end if;
       end case;
     end if;

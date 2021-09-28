@@ -63,17 +63,16 @@ begin
     rx <= '1';
     wait for clk_period * 434;
 
-    -- arst_n  <= '0';
-    -- clk_ena <= false;
+    
 
-    wait for clk_period * 10;
+    wait for clk_period * 20;
 
     -- brings the state machine to rx state for receiving data
-    -- for a normal senario case
+    -- for a disrupted senario case
     rx <= '0';
-    wait for clk_period * 434/3; -- 434 is one bit period.
+    wait for clk_period * 434*2/3; -- 434 is one bit period.
     rx <= '1';
-    wait for clk_period * 434 *2/3;
+    wait for clk_period * 434 /3;
 
     for i in 0 to 7 loop
       rx <= rx_test_data(i);
@@ -82,6 +81,7 @@ begin
 
     rx <= '1';
     wait for clk_period * 434;
+    -- the above do not count the whole process to the end
 
     arst_n  <= '0';
     clk_ena <= false;
