@@ -19,3 +19,7 @@ _*
 
 # ignore Quartus bak files
 *.bak
+
+# ignore tests
+*test*
+*tests*
