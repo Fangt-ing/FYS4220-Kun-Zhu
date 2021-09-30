@@ -20,9 +20,7 @@ architecture rtl of uart_rx is
   type state_type is (SIdle, SReceive);
 
   signal rx_state : state_type;
-
   signal baud_cnt : integer := 0; -- can be assigned as integer
-
   signal bit_cnt : integer := 0; -- enables the bit to count up in the register
   -- baudrate = 115200 bits/s, then 1 bit period = 1/115200 = 8.68 us
   -- constant bit_period : time := 8.68 us --> bit_period = time/clk = 434 times of changes
