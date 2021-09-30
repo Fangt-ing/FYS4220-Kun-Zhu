@@ -23,3 +23,6 @@ _*
 # ignore tests
 *test*
 *tests*
+
+# ignore the simulation file
+*.wlf
