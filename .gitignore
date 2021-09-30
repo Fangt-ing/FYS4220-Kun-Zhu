@@ -26,3 +26,4 @@ _*
 
 # ignore the simulation file
 *.wlf
+*.mpf
