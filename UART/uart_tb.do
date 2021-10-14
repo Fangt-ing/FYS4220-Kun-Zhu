@@ -1,0 +1,12 @@
+- project
+  - UVVM_Light (will be cloned from Github)
+  - tb
+    - uart_tb.vhd
+  - src
+    - uart_rx.vhd
+    - uart_tx.vhd
+    - uart.vhd
+  - scripts
+    - compile_src.do
+    - run.do
+  - simulation
