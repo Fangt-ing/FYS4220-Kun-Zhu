@@ -78,7 +78,7 @@ begin
       end case;
     end if;
 
-    if arst_n = '1' then
+    if arst_n = '0' then
       rx_state <= SIdle;
     end if;
   end process;

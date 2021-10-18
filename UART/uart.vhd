@@ -25,23 +25,24 @@ entity uart is
 
         -- uart interface
         rx : in std_logic;
-        tx : out std_logic
+        tx : out std_logic;
+        irq : out std_logic
 
     );
 end entity uart;
 
 architecture rtl of uart is
     -- declaration for tx ports
-    -- component uart_tx is
-    --     port (
-    --         clk           : in std_logic;                     -- 50 MHz system clock
-    --         arst_n        : in std_logic;                     -- Asynchronous active low reset
-    --         tx_data       : in std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
-    --         tx_data_valid : in std_logic;                     -- Valid data on tx_data. Start transmission.
-    --         tx_busy       : out std_logic;                    -- Module busy, transmission ongoing (active high)
-    --         tx            : out std_logic                     -- UART TX output
-    --     );
-    -- end component;
+    component uart_tx is
+        port (
+            clk           : in std_logic;                     -- 50 MHz system clock
+            arst_n        : in std_logic;                     -- Asynchronous active low reset
+            tx_data       : in std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
+            tx_data_valid : in std_logic;                     -- Valid data on tx_data. Start transmission.
+            tx_busy       : out std_logic;                    -- Module busy, transmission ongoing (active high)
+            tx            : out std_logic                     -- UART TX output
+        );
+    end component;
 
     -- declaration for rx ports
     component uart_rx is
@@ -74,15 +75,15 @@ architecture rtl of uart is
 begin
 
     -- tx port map
-    -- entity work.uart_tx
-    -- port map(
-    --     clk           => clk,
-    --     arst_n        => arst_n,
-    --     tx_data       => tx_data,
-    --     tx_data_valid => tx_data_valid,
-    --     tx_busy       => tx_busy,
-    --     tx            => tx
-    -- );
+    tx_inst : uart_tx
+    port map(
+        clk           => clk,
+        arst_n        => arst_n,
+        tx_data       => tx_data(7 downto 0),
+        tx_data_valid => tx_data_valid,
+        tx_busy       => tx_busy,
+        tx            => tx
+    );
 
     -- rx port map
     rx_inst : uart_rx
@@ -98,11 +99,9 @@ begin
     p_clk : process (clk)
     begin
         -- reset the signlas. 
-        if arst_n = '1' then
+        if arst_n = '0' then
             tx_data       <= (others => '0');
             tx_data_valid <= '0';
-            tx            <= '0';
-            tx_busy       <= '0';
             rx_err        <= '0';
             tx_busy_temp  <= '0';
             status        <= (others => '0');
@@ -137,9 +136,10 @@ begin
             -- detect the flip-flop rising eadge to determine weather to transmit data to tx.
             if tx_busy_temp = '0' and tx_busy = '1' then
                 -- stops cpu to write further while tx_busy at the rising_edge
-                tx_data_valid <= '1';
-            elsif tx_busy_temp = '1' and tx_busy = '0' then
                 tx_data_valid <= '0';
+            -- elsif tx_busy_temp = '1' and tx_busy = '0' then
+                -- tx_data_valid <= '0';
+                -- irq
             end if;
         end if;
     end process;

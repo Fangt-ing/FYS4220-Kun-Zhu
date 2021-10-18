@@ -39,7 +39,7 @@ begin
       case tx_state is
         when SIdle =>
           tx_busy  <= '0';
-          tx       <= '0';
+          tx       <= '1';
           baud_cnt <= "000000000";
           tx_busy  <= '0';
           bit_cnt  := "0000";
@@ -64,7 +64,7 @@ begin
       end case;
     end if;
 
-    if arst_n = '1' then
+    if arst_n = '0' then
       tx_state <= SIdle;
     end if;
   end process;
