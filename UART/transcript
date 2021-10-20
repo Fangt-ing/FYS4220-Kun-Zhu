@@ -1,0 +1,823 @@
+# Compile of uart_tx_tb.vhd was successful.
+# Compile of uart_rx.vhd was successful.
+# Compile of uart_tx.vhd was successful.
+# Compile of uart_rx_tb.vhd was successful.
+# Compile of uart_tb.vhd failed with 1 errors.
+# Compile of uart.vhd was successful.
+# 6 compiles, 1 failed with 1 error.
+pwd
+# D:/ProgramData/GitHub/FYS4220-Kun-Zhu/UART
+vcom -2008 uart_tb.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 13:25:40 on Oct 19,2021
+# vcom -reportprogress 300 -2008 uart_tb.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Loading context declaration uvvm_util_context
+# -- Loading package types_pkg
+# -- Loading package adaptations_pkg
+# -- Loading package MATH_REAL
+# -- Loading package string_methods_pkg
+# -- Loading package protected_types_pkg
+# -- Loading package global_signals_and_shared_variables_pkg
+# -- Loading package hierarchy_linked_list_pkg
+# -- Loading package license_pkg
+# -- Loading package ENV
+# -- Loading package alert_hierarchy_pkg
+# -- Loading package methods_pkg
+# -- Loading package bfm_common_pkg
+# -- Loading context declaration uvvm_util_context
+# -- Loading package uart_bfm_pkg
+# -- Loading context declaration uvvm_util_context
+# -- Loading package avalon_mm_bfm_pkg
+# -- Compiling entity uart_tb
+# -- Compiling architecture sim of uart_tb
+# -- Loading entity uart
+# End time: 13:25:41 on Oct 19,2021, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+vsim uart_tb
+# vsim uart_tb 
+# Start time: 13:25:59 on Oct 19,2021
+# Loading std.standard
+# Loading std.textio(body)
+# Loading ieee.std_logic_1164(body)
+# Loading ieee.numeric_std(body)
+# Loading uvvm_util.types_pkg(body)
+# Loading uvvm_util.adaptations_pkg(body)
+# Loading ieee.math_real(body)
+# Loading uvvm_util.string_methods_pkg(body)
+# Loading uvvm_util.protected_types_pkg(body)
+# Loading uvvm_util.global_signals_and_shared_variables_pkg
+# Loading uvvm_util.hierarchy_linked_list_pkg(body)
+# Loading uvvm_util.license_pkg(body)
+# Loading std.env(body)
+# Loading uvvm_util.alert_hierarchy_pkg(body)
+# Loading uvvm_util.methods_pkg(body)
+# ** Note: 
+# 
+# 
+# *****************************************************************************************************
+#  This is a *** LICENSED PRODUCT *** as given in the LICENSE.TXT in the root directory.
+# *****************************************************************************************************
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# ** Note: 
+# 
+# =====================================================================================================
+# =====================================================================================================
+# This info section may be turned off via C_SHOW_UVVM_UTILITY_LIBRARY_INFO in adaptations_pkg.vhd
+# 
+# Important Simulator setup: 
+# - Set simulator to break on severity 'FAILURE' 
+# - Set simulator transcript to a monospace font (e.g. Courier new)
+# 
+# UVVM Utility Library setup:
+# - It is recommended to go through the two powerpoint presentations provided with the download
+# - There is a Quick-Reference in the doc-directory
+# - In order to change layout or behaviour - please check the src*/adaptations_pkg.vhd
+#   This is intended for personal or company customization
+# 
+# License conditions are given in LICENSE.TXT
+# =====================================================================================================
+# =====================================================================================================
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# Loading uvvm_util.bfm_common_pkg(body)
+# Loading uvvm_util.uart_bfm_pkg(body)
+# Loading uvvm_util.avalon_mm_bfm_pkg(body)
+# Loading work.uart_tb(sim)
+# Loading work.uart(rtl)
+# Loading work.uart_tx(rtl)
+# Loading work.uart_rx(rtl)
+# ** Warning: Design size of 14938 statements exceeds ModelSim-Intel FPGA Starter Edition recommended capacity.
+# Expect performance to be adversely affected.
+add wave -position insertpoint  \
+sim:/uart_tb/clk_ena \
+sim:/uart_tb/clk \
+sim:/uart_tb/arst_n \
+sim:/uart_tb/rx \
+sim:/uart_tb/tx \
+sim:/uart_tb/irq \
+sim:/uart_tb/avalon_mm_if \
+sim:/uart_tb/terminate_loop \
+sim:/uart_tb/GC_SYSTEM_CLK \
+sim:/uart_tb/GC_BAUD_RATE \
+sim:/uart_tb/C_BIT_PERIOD \
+sim:/uart_tb/C_CLK_PERIOD \
+sim:/uart_tb/C_AVALON_MM_BFM_CONFIG \
+sim:/uart_tb/C_UART_BFM_CONFIG_DEFAULT \
+sim:/uart_tb/C_BFM_ERROR_INJECTION_ACTIVE \
+sim:/uart_tb/C_UART_BFM_CONFIG_STOP_ERROR
+run -all
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF GLOBAL CTRL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                                IGNORE    STOP_LIMIT
+# UVVM:                NOTE         :  REGARD         0
+# UVVM:                TB_NOTE      :  REGARD         0
+# UVVM:                WARNING      :  REGARD         0
+# UVVM:                TB_WARNING   :  REGARD         0
+# UVVM:                MANUAL_CHECK :  REGARD         0
+# UVVM:                ERROR        :  REGARD         1
+# UVVM:                TB_ERROR     :  REGARD         1
+# UVVM:                FAILURE      :  REGARD         1
+# UVVM:                TB_FAILURE   :  REGARD         1
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF MSG ID PANEL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                ID                             Status
+# UVVM:                ------------------------       ------
+# UVVM:                ID_UTIL_BURIED               : DISABLED
+# UVVM:                ID_BITVIS_DEBUG              : DISABLED
+# UVVM:                ID_UTIL_SETUP                : ENABLED
+# UVVM:                ID_LOG_MSG_CTRL              : ENABLED
+# UVVM:                ID_ALERT_CTRL                : ENABLED
+# UVVM:                ID_FINISH_OR_STOP            : ENABLED
+# UVVM:                ID_CLOCK_GEN                 : ENABLED
+# UVVM:                ID_GEN_PULSE                 : ENABLED
+# UVVM:                ID_BLOCKING                  : ENABLED
+# UVVM:                ID_WATCHDOG                  : ENABLED
+# UVVM:                ID_POS_ACK                   : ENABLED
+# UVVM:                ID_LOG_HDR                   : ENABLED
+# UVVM:                ID_LOG_HDR_LARGE             : ENABLED
+# UVVM:                ID_LOG_HDR_XL                : ENABLED
+# UVVM:                ID_SEQUENCER                 : ENABLED
+# UVVM:                ID_SEQUENCER_SUB             : ENABLED
+# UVVM:                ID_BFM                       : ENABLED
+# UVVM:                ID_BFM_WAIT                  : ENABLED
+# UVVM:                ID_BFM_POLL                  : ENABLED
+# UVVM:                ID_BFM_POLL_SUMMARY          : ENABLED
+# UVVM:                ID_CHANNEL_BFM               : ENABLED
+# UVVM:                ID_TERMINATE_CMD             : ENABLED
+# UVVM:                ID_SEGMENT_INITIATE          : ENABLED
+# UVVM:                ID_SEGMENT_COMPLETE          : ENABLED
+# UVVM:                ID_SEGMENT_HDR               : ENABLED
+# UVVM:                ID_SEGMENT_DATA              : ENABLED
+# UVVM:                ID_PACKET_INITIATE           : ENABLED
+# UVVM:                ID_PACKET_PREAMBLE           : ENABLED
+# UVVM:                ID_PACKET_COMPLETE           : ENABLED
+# UVVM:                ID_PACKET_HDR                : ENABLED
+# UVVM:                ID_PACKET_DATA               : ENABLED
+# UVVM:                ID_PACKET_CHECKSUM           : ENABLED
+# UVVM:                ID_PACKET_GAP                : ENABLED
+# UVVM:                ID_FRAME_INITIATE            : ENABLED
+# UVVM:                ID_FRAME_COMPLETE            : ENABLED
+# UVVM:                ID_FRAME_HDR                 : ENABLED
+# UVVM:                ID_FRAME_DATA                : ENABLED
+# UVVM:                ID_COVERAGE_MAKEBIN          : DISABLED
+# UVVM:                ID_COVERAGE_ADDBIN           : DISABLED
+# UVVM:                ID_COVERAGE_ICOVER           : DISABLED
+# UVVM:                ID_COVERAGE_CONFIG           : ENABLED
+# UVVM:                ID_COVERAGE_SUMMARY          : ENABLED
+# UVVM:                ID_COVERAGE_HOLES            : ENABLED
+# UVVM:                ID_UVVM_SEND_CMD             : ENABLED
+# UVVM:                ID_UVVM_CMD_ACK              : ENABLED
+# UVVM:                ID_UVVM_CMD_RESULT           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER_WAIT      : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD             : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD_WAIT        : ENABLED
+# UVVM:                ID_CMD_EXECUTOR              : ENABLED
+# UVVM:                ID_CMD_EXECUTOR_WAIT         : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR          : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR_WAIT     : ENABLED
+# UVVM:                ID_NEW_HVVC_CMD_SEQ          : ENABLED
+# UVVM:                ID_INSERTED_DELAY            : ENABLED
+# UVVM:                ID_OLD_AWAIT_COMPLETION      : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION          : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_LIST     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_WAIT     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_END      : ENABLED
+# UVVM:                ID_UVVM_DATA_QUEUE           : ENABLED
+# UVVM:                ID_CONSTRUCTOR               : ENABLED
+# UVVM:                ID_CONSTRUCTOR_SUB           : ENABLED
+# UVVM:                ID_VVC_ACTIVITY              : ENABLED
+# UVVM:                ID_MONITOR                   : ENABLED
+# UVVM:                ID_MONITOR_ERROR             : ENABLED
+# UVVM:                ID_DATA                      : ENABLED
+# UVVM:                ID_CTRL                      : ENABLED
+# UVVM:                ID_FILE_OPEN_CLOSE           : ENABLED
+# UVVM:                ID_FILE_PARSER               : ENABLED
+# UVVM:                ID_SPEC_COV                  : ENABLED
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        enable_log_msg(ALL_MESSAGES). 
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        disable_log_msg(ID_POS_ACK). 
+# UVVM: 
+# UVVM: 
+# UVVM: ID_LOG_HDR                         0.0 ns  TB seq.                        Start Simulation of TB for UART controller
+# UVVM: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM: ID_SEQUENCER                       0.0 ns  TB seq.                        Set default values for I/O and enable clock and reset system
+# UVVM: ID_SEQUENCER                     100.0 ns  TB seq.                        Activate async. reset for clk periods
+# UVVM: ID_SEQUENCER                     300.0 ns  TB seq.                        Testing TX
+# UVVM: ID_BFM                           335.0 ns  TB seq.                        avalon_mm_write(A:x"0", x"000000AA") completed. 'MM if Write transaction to UART data reg --
+# UVVM:                                                                           enabeling TX transaction'
+# UVVM: ID_BFM                         82830.0 ns  TB seq.                        uart_receive()=> x"AA". 'UART receive transaction'
+# UVVM: 
+# UVVM: =========================================================================================================================================================================
+# UVVM: ***  ERROR #1  ***
+# UVVM:     91510.555 ns   TB seq.
+# UVVM:                    await_value(std_logic 1, 0 ns, 8680.555 ns) => Failed. Timed out after 8680.555 ns. 'Interrupt expected'
+# UVVM: 
+# UVVM: Simulator has been paused as requested after 1 ERROR
+# UVVM: *** To find the root cause of this alert, step out the HDL calling stack in your simulator. ***
+# UVVM: *** For example, step out until you reach the call from the test sequencer. ***
+# UVVM: =========================================================================================================================================================================
+# UVVM: 
+# UVVM: 
+# ** Note: stop
+#    Time: 91510555 ps  Iteration: 0  Instance: /uart_tb
+# Break in Subprogram alert at UVVM_Light/src_util/methods_pkg.vhd line 3697
+# Compile of uart.vhd was successful.
+restart
+# ** Note: 
+# 
+# 
+# *****************************************************************************************************
+#  This is a *** LICENSED PRODUCT *** as given in the LICENSE.TXT in the root directory.
+# *****************************************************************************************************
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# ** Note: 
+# 
+# =====================================================================================================
+# =====================================================================================================
+# This info section may be turned off via C_SHOW_UVVM_UTILITY_LIBRARY_INFO in adaptations_pkg.vhd
+# 
+# Important Simulator setup: 
+# - Set simulator to break on severity 'FAILURE' 
+# - Set simulator transcript to a monospace font (e.g. Courier new)
+# 
+# UVVM Utility Library setup:
+# - It is recommended to go through the two powerpoint presentations provided with the download
+# - There is a Quick-Reference in the doc-directory
+# - In order to change layout or behaviour - please check the src*/adaptations_pkg.vhd
+#   This is intended for personal or company customization
+# 
+# License conditions are given in LICENSE.TXT
+# =====================================================================================================
+# =====================================================================================================
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# Loading work.uart(rtl)
+run -all
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF GLOBAL CTRL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                                IGNORE    STOP_LIMIT
+# UVVM:                NOTE         :  REGARD         0
+# UVVM:                TB_NOTE      :  REGARD         0
+# UVVM:                WARNING      :  REGARD         0
+# UVVM:                TB_WARNING   :  REGARD         0
+# UVVM:                MANUAL_CHECK :  REGARD         0
+# UVVM:                ERROR        :  REGARD         1
+# UVVM:                TB_ERROR     :  REGARD         1
+# UVVM:                FAILURE      :  REGARD         1
+# UVVM:                TB_FAILURE   :  REGARD         1
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF MSG ID PANEL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                ID                             Status
+# UVVM:                ------------------------       ------
+# UVVM:                ID_UTIL_BURIED               : DISABLED
+# UVVM:                ID_BITVIS_DEBUG              : DISABLED
+# UVVM:                ID_UTIL_SETUP                : ENABLED
+# UVVM:                ID_LOG_MSG_CTRL              : ENABLED
+# UVVM:                ID_ALERT_CTRL                : ENABLED
+# UVVM:                ID_FINISH_OR_STOP            : ENABLED
+# UVVM:                ID_CLOCK_GEN                 : ENABLED
+# UVVM:                ID_GEN_PULSE                 : ENABLED
+# UVVM:                ID_BLOCKING                  : ENABLED
+# UVVM:                ID_WATCHDOG                  : ENABLED
+# UVVM:                ID_POS_ACK                   : ENABLED
+# UVVM:                ID_LOG_HDR                   : ENABLED
+# UVVM:                ID_LOG_HDR_LARGE             : ENABLED
+# UVVM:                ID_LOG_HDR_XL                : ENABLED
+# UVVM:                ID_SEQUENCER                 : ENABLED
+# UVVM:                ID_SEQUENCER_SUB             : ENABLED
+# UVVM:                ID_BFM                       : ENABLED
+# UVVM:                ID_BFM_WAIT                  : ENABLED
+# UVVM:                ID_BFM_POLL                  : ENABLED
+# UVVM:                ID_BFM_POLL_SUMMARY          : ENABLED
+# UVVM:                ID_CHANNEL_BFM               : ENABLED
+# UVVM:                ID_TERMINATE_CMD             : ENABLED
+# UVVM:                ID_SEGMENT_INITIATE          : ENABLED
+# UVVM:                ID_SEGMENT_COMPLETE          : ENABLED
+# UVVM:                ID_SEGMENT_HDR               : ENABLED
+# UVVM:                ID_SEGMENT_DATA              : ENABLED
+# UVVM:                ID_PACKET_INITIATE           : ENABLED
+# UVVM:                ID_PACKET_PREAMBLE           : ENABLED
+# UVVM:                ID_PACKET_COMPLETE           : ENABLED
+# UVVM:                ID_PACKET_HDR                : ENABLED
+# UVVM:                ID_PACKET_DATA               : ENABLED
+# UVVM:                ID_PACKET_CHECKSUM           : ENABLED
+# UVVM:                ID_PACKET_GAP                : ENABLED
+# UVVM:                ID_FRAME_INITIATE            : ENABLED
+# UVVM:                ID_FRAME_COMPLETE            : ENABLED
+# UVVM:                ID_FRAME_HDR                 : ENABLED
+# UVVM:                ID_FRAME_DATA                : ENABLED
+# UVVM:                ID_COVERAGE_MAKEBIN          : DISABLED
+# UVVM:                ID_COVERAGE_ADDBIN           : DISABLED
+# UVVM:                ID_COVERAGE_ICOVER           : DISABLED
+# UVVM:                ID_COVERAGE_CONFIG           : ENABLED
+# UVVM:                ID_COVERAGE_SUMMARY          : ENABLED
+# UVVM:                ID_COVERAGE_HOLES            : ENABLED
+# UVVM:                ID_UVVM_SEND_CMD             : ENABLED
+# UVVM:                ID_UVVM_CMD_ACK              : ENABLED
+# UVVM:                ID_UVVM_CMD_RESULT           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER_WAIT      : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD             : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD_WAIT        : ENABLED
+# UVVM:                ID_CMD_EXECUTOR              : ENABLED
+# UVVM:                ID_CMD_EXECUTOR_WAIT         : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR          : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR_WAIT     : ENABLED
+# UVVM:                ID_NEW_HVVC_CMD_SEQ          : ENABLED
+# UVVM:                ID_INSERTED_DELAY            : ENABLED
+# UVVM:                ID_OLD_AWAIT_COMPLETION      : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION          : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_LIST     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_WAIT     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_END      : ENABLED
+# UVVM:                ID_UVVM_DATA_QUEUE           : ENABLED
+# UVVM:                ID_CONSTRUCTOR               : ENABLED
+# UVVM:                ID_CONSTRUCTOR_SUB           : ENABLED
+# UVVM:                ID_VVC_ACTIVITY              : ENABLED
+# UVVM:                ID_MONITOR                   : ENABLED
+# UVVM:                ID_MONITOR_ERROR             : ENABLED
+# UVVM:                ID_DATA                      : ENABLED
+# UVVM:                ID_CTRL                      : ENABLED
+# UVVM:                ID_FILE_OPEN_CLOSE           : ENABLED
+# UVVM:                ID_FILE_PARSER               : ENABLED
+# UVVM:                ID_SPEC_COV                  : ENABLED
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        enable_log_msg(ALL_MESSAGES). 
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        disable_log_msg(ID_POS_ACK). 
+# UVVM: 
+# UVVM: 
+# UVVM: ID_LOG_HDR                         0.0 ns  TB seq.                        Start Simulation of TB for UART controller
+# UVVM: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM: ID_SEQUENCER                       0.0 ns  TB seq.                        Set default values for I/O and enable clock and reset system
+# UVVM: ID_SEQUENCER                     100.0 ns  TB seq.                        Activate async. reset for clk periods
+# UVVM: ID_SEQUENCER                     300.0 ns  TB seq.                        Testing TX
+# UVVM: ID_BFM                           335.0 ns  TB seq.                        avalon_mm_write(A:x"0", x"000000AA") completed. 'MM if Write transaction to UART data reg --
+# UVVM:                                                                           enabeling TX transaction'
+# UVVM: ID_BFM                         82830.0 ns  TB seq.                        uart_receive()=> x"AA". 'UART receive transaction'
+# UVVM: 
+# UVVM: =========================================================================================================================================================================
+# UVVM: ***  ERROR #1  ***
+# UVVM:     91510.555 ns   TB seq.
+# UVVM:                    await_value(std_logic 1, 0 ns, 8680.555 ns) => Failed. Timed out after 8680.555 ns. 'Interrupt expected'
+# UVVM: 
+# UVVM: Simulator has been paused as requested after 1 ERROR
+# UVVM: *** To find the root cause of this alert, step out the HDL calling stack in your simulator. ***
+# UVVM: *** For example, step out until you reach the call from the test sequencer. ***
+# UVVM: =========================================================================================================================================================================
+# UVVM: 
+# UVVM: 
+# ** Note: stop
+#    Time: 91510555 ps  Iteration: 0  Instance: /uart_tb
+# Break in Subprogram alert at UVVM_Light/src_util/methods_pkg.vhd line 3697
+run -all
+# UVVM: ID_BFM                         91555.0 ns  TB seq.                        avalon_mm_check_response(A:x"2", x"00000010")=> OK, received data = x"10". 'MM IF transaction
+# UVVM:                                                                           to verify correct TX IRQ value in status register'
+# UVVM: ID_BFM                         91575.0 ns  TB seq.                        avalon_mm_write(A:x"2", x"00000000") completed. 'MM IF Write transaction to reset irq in status
+# UVVM:                                                                           register'
+# UVVM: ID_SEQUENCER                   93575.0 ns  TB seq.                        Testing RX
+# UVVM: ID_BFM                        180375.0 ns  TB seq.                        uart_transmit(x"55") completed. 'UART TX'
+# UVVM: 
+# UVVM: ***  WARNING #1  ***
+# UVVM:        180515 ns   TB seq.
+# UVVM:                    avalon_mm_check_response(A:x"1", x"00000055")=> Failed. Was x"XXXXXXXX". Expected x"00000055".
+# UVVM:                    'MM IF transaction to verify correct value in RX data register'
+# UVVM: 
+# UVVM: 
+# UVVM: ***  WARNING #2  ***
+# UVVM:        180555 ns   TB seq.
+# UVVM:                    avalon_mm_check_response(A:x"2", x"00000020")=> Failed. Was x"00000024". Expected x"00000020".
+# UVVM:                    'MM IF transaction to verify correct TX IRQ value in status register'
+# UVVM: 
+# UVVM: ID_BFM                        180575.0 ns  TB seq.                        avalon_mm_write(A:x"2", x"00000000") completed. 'MM IF Write transaction to reset irq in status
+# UVVM:                                                                           register'
+# UVVM: ID_SEQUENCER                  180575.0 ns  TB seq.                        Testing RX with error injections on stop bit
+# UVVM: ID_BFM                        267375.0 ns  TB seq.                        uart_transmit(x"55") completed. 'UART TX'
+# UVVM: 
+# UVVM: ***  WARNING #3  ***
+# UVVM:        267515 ns   TB seq.
+# UVVM:                    avalon_mm_check_response(A:x"1", x"00000055")=> Failed. Was x"XXXXXX55". Expected x"00000055".
+# UVVM:                    'MM IF transaction to verify correct value in RX data register'
+# UVVM: 
+# UVVM: 
+# UVVM: ***  WARNING #4  ***
+# UVVM:        267555 ns   TB seq.
+# UVVM:                    avalon_mm_check_response(A:x"2", x"00000028")=> Failed. Was x"00000024". Expected x"00000028".
+# UVVM:                    'MM IF transaction to verify correct value in RX data register'
+# UVVM: 
+# UVVM: ID_BFM                        267575.0 ns  TB seq.                        avalon_mm_write(A:x"2", x"00000000") completed. 'MM IF Write transaction to reset irq in status
+# UVVM:                                                                           register'
+# UVVM:      
+# UVVM:      ====================================================================================================================================================================
+# UVVM:      *** FINAL SUMMARY OF ALL ALERTS ***
+# UVVM:      ====================================================================================================================================================================
+# UVVM:                                REGARDED   EXPECTED  IGNORED      Comment?
+# UVVM:                NOTE         :      0         0         0         ok
+# UVVM:                TB_NOTE      :      0         0         0         ok
+# UVVM:                WARNING      :      4         0         0         *** WARNING ***
+# UVVM:                TB_WARNING   :      0         0         0         ok
+# UVVM:                MANUAL_CHECK :      0         0         0         ok
+# UVVM:                ERROR        :      1         0         0         *** ERROR ***
+# UVVM:                TB_ERROR     :      0         0         0         ok
+# UVVM:                FAILURE      :      0         0         0         ok
+# UVVM:                TB_FAILURE   :      0         0         0         ok
+# UVVM:      ====================================================================================================================================================================
+# UVVM:      >> Simulation FAILED, with unexpected serious alert(s)
+# UVVM:      ====================================================================================================================================================================
+# UVVM:      
+# UVVM:      
+# UVVM: 
+# UVVM: 
+# UVVM: ID_LOG_HDR                    267675.0 ns  TB seq.                        SIMULATION COMPLETED
+# UVVM: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+add wave -position insertpoint  \
+sim:/uart_tb/UUT/rx_inst/clk \
+sim:/uart_tb/UUT/rx_inst/arst_n \
+sim:/uart_tb/UUT/rx_inst/rx \
+sim:/uart_tb/UUT/rx_inst/rx_data \
+sim:/uart_tb/UUT/rx_inst/rx_err \
+sim:/uart_tb/UUT/rx_inst/rx_busy \
+sim:/uart_tb/UUT/rx_inst/rx_state \
+sim:/uart_tb/UUT/rx_inst/baud_cnt \
+sim:/uart_tb/UUT/rx_inst/bit_cnt \
+sim:/uart_tb/UUT/rx_inst/rx_buffer \
+sim:/uart_tb/UUT/rx_inst/bit_period
+restart
+# ** Note: 
+# 
+# 
+# *****************************************************************************************************
+#  This is a *** LICENSED PRODUCT *** as given in the LICENSE.TXT in the root directory.
+# *****************************************************************************************************
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# ** Note: 
+# 
+# =====================================================================================================
+# =====================================================================================================
+# This info section may be turned off via C_SHOW_UVVM_UTILITY_LIBRARY_INFO in adaptations_pkg.vhd
+# 
+# Important Simulator setup: 
+# - Set simulator to break on severity 'FAILURE' 
+# - Set simulator transcript to a monospace font (e.g. Courier new)
+# 
+# UVVM Utility Library setup:
+# - It is recommended to go through the two powerpoint presentations provided with the download
+# - There is a Quick-Reference in the doc-directory
+# - In order to change layout or behaviour - please check the src*/adaptations_pkg.vhd
+#   This is intended for personal or company customization
+# 
+# License conditions are given in LICENSE.TXT
+# =====================================================================================================
+# =====================================================================================================
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+run -all
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF GLOBAL CTRL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                                IGNORE    STOP_LIMIT
+# UVVM:                NOTE         :  REGARD         0
+# UVVM:                TB_NOTE      :  REGARD         0
+# UVVM:                WARNING      :  REGARD         0
+# UVVM:                TB_WARNING   :  REGARD         0
+# UVVM:                MANUAL_CHECK :  REGARD         0
+# UVVM:                ERROR        :  REGARD         1
+# UVVM:                TB_ERROR     :  REGARD         1
+# UVVM:                FAILURE      :  REGARD         1
+# UVVM:                TB_FAILURE   :  REGARD         1
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF MSG ID PANEL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                ID                             Status
+# UVVM:                ------------------------       ------
+# UVVM:                ID_UTIL_BURIED               : DISABLED
+# UVVM:                ID_BITVIS_DEBUG              : DISABLED
+# UVVM:                ID_UTIL_SETUP                : ENABLED
+# UVVM:                ID_LOG_MSG_CTRL              : ENABLED
+# UVVM:                ID_ALERT_CTRL                : ENABLED
+# UVVM:                ID_FINISH_OR_STOP            : ENABLED
+# UVVM:                ID_CLOCK_GEN                 : ENABLED
+# UVVM:                ID_GEN_PULSE                 : ENABLED
+# UVVM:                ID_BLOCKING                  : ENABLED
+# UVVM:                ID_WATCHDOG                  : ENABLED
+# UVVM:                ID_POS_ACK                   : ENABLED
+# UVVM:                ID_LOG_HDR                   : ENABLED
+# UVVM:                ID_LOG_HDR_LARGE             : ENABLED
+# UVVM:                ID_LOG_HDR_XL                : ENABLED
+# UVVM:                ID_SEQUENCER                 : ENABLED
+# UVVM:                ID_SEQUENCER_SUB             : ENABLED
+# UVVM:                ID_BFM                       : ENABLED
+# UVVM:                ID_BFM_WAIT                  : ENABLED
+# UVVM:                ID_BFM_POLL                  : ENABLED
+# UVVM:                ID_BFM_POLL_SUMMARY          : ENABLED
+# UVVM:                ID_CHANNEL_BFM               : ENABLED
+# UVVM:                ID_TERMINATE_CMD             : ENABLED
+# UVVM:                ID_SEGMENT_INITIATE          : ENABLED
+# UVVM:                ID_SEGMENT_COMPLETE          : ENABLED
+# UVVM:                ID_SEGMENT_HDR               : ENABLED
+# UVVM:                ID_SEGMENT_DATA              : ENABLED
+# UVVM:                ID_PACKET_INITIATE           : ENABLED
+# UVVM:                ID_PACKET_PREAMBLE           : ENABLED
+# UVVM:                ID_PACKET_COMPLETE           : ENABLED
+# UVVM:                ID_PACKET_HDR                : ENABLED
+# UVVM:                ID_PACKET_DATA               : ENABLED
+# UVVM:                ID_PACKET_CHECKSUM           : ENABLED
+# UVVM:                ID_PACKET_GAP                : ENABLED
+# UVVM:                ID_FRAME_INITIATE            : ENABLED
+# UVVM:                ID_FRAME_COMPLETE            : ENABLED
+# UVVM:                ID_FRAME_HDR                 : ENABLED
+# UVVM:                ID_FRAME_DATA                : ENABLED
+# UVVM:                ID_COVERAGE_MAKEBIN          : DISABLED
+# UVVM:                ID_COVERAGE_ADDBIN           : DISABLED
+# UVVM:                ID_COVERAGE_ICOVER           : DISABLED
+# UVVM:                ID_COVERAGE_CONFIG           : ENABLED
+# UVVM:                ID_COVERAGE_SUMMARY          : ENABLED
+# UVVM:                ID_COVERAGE_HOLES            : ENABLED
+# UVVM:                ID_UVVM_SEND_CMD             : ENABLED
+# UVVM:                ID_UVVM_CMD_ACK              : ENABLED
+# UVVM:                ID_UVVM_CMD_RESULT           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER_WAIT      : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD             : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD_WAIT        : ENABLED
+# UVVM:                ID_CMD_EXECUTOR              : ENABLED
+# UVVM:                ID_CMD_EXECUTOR_WAIT         : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR          : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR_WAIT     : ENABLED
+# UVVM:                ID_NEW_HVVC_CMD_SEQ          : ENABLED
+# UVVM:                ID_INSERTED_DELAY            : ENABLED
+# UVVM:                ID_OLD_AWAIT_COMPLETION      : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION          : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_LIST     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_WAIT     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_END      : ENABLED
+# UVVM:                ID_UVVM_DATA_QUEUE           : ENABLED
+# UVVM:                ID_CONSTRUCTOR               : ENABLED
+# UVVM:                ID_CONSTRUCTOR_SUB           : ENABLED
+# UVVM:                ID_VVC_ACTIVITY              : ENABLED
+# UVVM:                ID_MONITOR                   : ENABLED
+# UVVM:                ID_MONITOR_ERROR             : ENABLED
+# UVVM:                ID_DATA                      : ENABLED
+# UVVM:                ID_CTRL                      : ENABLED
+# UVVM:                ID_FILE_OPEN_CLOSE           : ENABLED
+# UVVM:                ID_FILE_PARSER               : ENABLED
+# UVVM:                ID_SPEC_COV                  : ENABLED
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        enable_log_msg(ALL_MESSAGES). 
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        disable_log_msg(ID_POS_ACK). 
+# UVVM: 
+# UVVM: 
+# UVVM: ID_LOG_HDR                         0.0 ns  TB seq.                        Start Simulation of TB for UART controller
+# UVVM: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM: ID_SEQUENCER                       0.0 ns  TB seq.                        Set default values for I/O and enable clock and reset system
+# UVVM: ID_SEQUENCER                     100.0 ns  TB seq.                        Activate async. reset for clk periods
+# UVVM: ID_SEQUENCER                     300.0 ns  TB seq.                        Testing TX
+# UVVM: ID_BFM                           335.0 ns  TB seq.                        avalon_mm_write(A:x"0", x"000000AA") completed. 'MM if Write transaction to UART data reg --
+# UVVM:                                                                           enabeling TX transaction'
+# UVVM: ID_BFM                         82830.0 ns  TB seq.                        uart_receive()=> x"AA". 'UART receive transaction'
+# UVVM: 
+# UVVM: =========================================================================================================================================================================
+# UVVM: ***  ERROR #1  ***
+# UVVM:     91510.555 ns   TB seq.
+# UVVM:                    await_value(std_logic 1, 0 ns, 8680.555 ns) => Failed. Timed out after 8680.555 ns. 'Interrupt expected'
+# UVVM: 
+# UVVM: Simulator has been paused as requested after 1 ERROR
+# UVVM: *** To find the root cause of this alert, step out the HDL calling stack in your simulator. ***
+# UVVM: *** For example, step out until you reach the call from the test sequencer. ***
+# UVVM: =========================================================================================================================================================================
+# UVVM: 
+# UVVM: 
+# ** Note: stop
+#    Time: 91510555 ps  Iteration: 0  Instance: /uart_tb
+# Break in Subprogram alert at UVVM_Light/src_util/methods_pkg.vhd line 3697
+# Compile of uart.vhd was successful.
+restart
+# ** Note: 
+# 
+# 
+# *****************************************************************************************************
+#  This is a *** LICENSED PRODUCT *** as given in the LICENSE.TXT in the root directory.
+# *****************************************************************************************************
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# ** Note: 
+# 
+# =====================================================================================================
+# =====================================================================================================
+# This info section may be turned off via C_SHOW_UVVM_UTILITY_LIBRARY_INFO in adaptations_pkg.vhd
+# 
+# Important Simulator setup: 
+# - Set simulator to break on severity 'FAILURE' 
+# - Set simulator transcript to a monospace font (e.g. Courier new)
+# 
+# UVVM Utility Library setup:
+# - It is recommended to go through the two powerpoint presentations provided with the download
+# - There is a Quick-Reference in the doc-directory
+# - In order to change layout or behaviour - please check the src*/adaptations_pkg.vhd
+#   This is intended for personal or company customization
+# 
+# License conditions are given in LICENSE.TXT
+# =====================================================================================================
+# =====================================================================================================
+# 
+# 
+#    Time: 0 ps  Iteration: 0  Region: /methods_pkg File: UVVM_Light/src_util/methods_pkg.vhd
+# Loading work.uart(rtl)
+run -all
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF GLOBAL CTRL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                                IGNORE    STOP_LIMIT
+# UVVM:                NOTE         :  REGARD         0
+# UVVM:                TB_NOTE      :  REGARD         0
+# UVVM:                WARNING      :  REGARD         0
+# UVVM:                TB_WARNING   :  REGARD         0
+# UVVM:                MANUAL_CHECK :  REGARD         0
+# UVVM:                ERROR        :  REGARD         1
+# UVVM:                TB_ERROR     :  REGARD         1
+# UVVM:                FAILURE      :  REGARD         1
+# UVVM:                TB_FAILURE   :  REGARD         1
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM:      
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      ***  REPORT OF MSG ID PANEL ***
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:                ID                             Status
+# UVVM:                ------------------------       ------
+# UVVM:                ID_UTIL_BURIED               : DISABLED
+# UVVM:                ID_BITVIS_DEBUG              : DISABLED
+# UVVM:                ID_UTIL_SETUP                : ENABLED
+# UVVM:                ID_LOG_MSG_CTRL              : ENABLED
+# UVVM:                ID_ALERT_CTRL                : ENABLED
+# UVVM:                ID_FINISH_OR_STOP            : ENABLED
+# UVVM:                ID_CLOCK_GEN                 : ENABLED
+# UVVM:                ID_GEN_PULSE                 : ENABLED
+# UVVM:                ID_BLOCKING                  : ENABLED
+# UVVM:                ID_WATCHDOG                  : ENABLED
+# UVVM:                ID_POS_ACK                   : ENABLED
+# UVVM:                ID_LOG_HDR                   : ENABLED
+# UVVM:                ID_LOG_HDR_LARGE             : ENABLED
+# UVVM:                ID_LOG_HDR_XL                : ENABLED
+# UVVM:                ID_SEQUENCER                 : ENABLED
+# UVVM:                ID_SEQUENCER_SUB             : ENABLED
+# UVVM:                ID_BFM                       : ENABLED
+# UVVM:                ID_BFM_WAIT                  : ENABLED
+# UVVM:                ID_BFM_POLL                  : ENABLED
+# UVVM:                ID_BFM_POLL_SUMMARY          : ENABLED
+# UVVM:                ID_CHANNEL_BFM               : ENABLED
+# UVVM:                ID_TERMINATE_CMD             : ENABLED
+# UVVM:                ID_SEGMENT_INITIATE          : ENABLED
+# UVVM:                ID_SEGMENT_COMPLETE          : ENABLED
+# UVVM:                ID_SEGMENT_HDR               : ENABLED
+# UVVM:                ID_SEGMENT_DATA              : ENABLED
+# UVVM:                ID_PACKET_INITIATE           : ENABLED
+# UVVM:                ID_PACKET_PREAMBLE           : ENABLED
+# UVVM:                ID_PACKET_COMPLETE           : ENABLED
+# UVVM:                ID_PACKET_HDR                : ENABLED
+# UVVM:                ID_PACKET_DATA               : ENABLED
+# UVVM:                ID_PACKET_CHECKSUM           : ENABLED
+# UVVM:                ID_PACKET_GAP                : ENABLED
+# UVVM:                ID_FRAME_INITIATE            : ENABLED
+# UVVM:                ID_FRAME_COMPLETE            : ENABLED
+# UVVM:                ID_FRAME_HDR                 : ENABLED
+# UVVM:                ID_FRAME_DATA                : ENABLED
+# UVVM:                ID_COVERAGE_MAKEBIN          : DISABLED
+# UVVM:                ID_COVERAGE_ADDBIN           : DISABLED
+# UVVM:                ID_COVERAGE_ICOVER           : DISABLED
+# UVVM:                ID_COVERAGE_CONFIG           : ENABLED
+# UVVM:                ID_COVERAGE_SUMMARY          : ENABLED
+# UVVM:                ID_COVERAGE_HOLES            : ENABLED
+# UVVM:                ID_UVVM_SEND_CMD             : ENABLED
+# UVVM:                ID_UVVM_CMD_ACK              : ENABLED
+# UVVM:                ID_UVVM_CMD_RESULT           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER           : ENABLED
+# UVVM:                ID_CMD_INTERPRETER_WAIT      : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD             : ENABLED
+# UVVM:                ID_IMMEDIATE_CMD_WAIT        : ENABLED
+# UVVM:                ID_CMD_EXECUTOR              : ENABLED
+# UVVM:                ID_CMD_EXECUTOR_WAIT         : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR          : ENABLED
+# UVVM:                ID_CHANNEL_EXECUTOR_WAIT     : ENABLED
+# UVVM:                ID_NEW_HVVC_CMD_SEQ          : ENABLED
+# UVVM:                ID_INSERTED_DELAY            : ENABLED
+# UVVM:                ID_OLD_AWAIT_COMPLETION      : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION          : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_LIST     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_WAIT     : ENABLED
+# UVVM:                ID_AWAIT_COMPLETION_END      : ENABLED
+# UVVM:                ID_UVVM_DATA_QUEUE           : ENABLED
+# UVVM:                ID_CONSTRUCTOR               : ENABLED
+# UVVM:                ID_CONSTRUCTOR_SUB           : ENABLED
+# UVVM:                ID_VVC_ACTIVITY              : ENABLED
+# UVVM:                ID_MONITOR                   : ENABLED
+# UVVM:                ID_MONITOR_ERROR             : ENABLED
+# UVVM:                ID_DATA                      : ENABLED
+# UVVM:                ID_CTRL                      : ENABLED
+# UVVM:                ID_FILE_OPEN_CLOSE           : ENABLED
+# UVVM:                ID_FILE_PARSER               : ENABLED
+# UVVM:                ID_SPEC_COV                  : ENABLED
+# UVVM:      --------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM:      
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        enable_log_msg(ALL_MESSAGES). 
+# UVVM: ID_LOG_MSG_CTRL                    0.0 ns  TB seq.                        disable_log_msg(ID_POS_ACK). 
+# UVVM: 
+# UVVM: 
+# UVVM: ID_LOG_HDR                         0.0 ns  TB seq.                        Start Simulation of TB for UART controller
+# UVVM: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# UVVM: ID_SEQUENCER                       0.0 ns  TB seq.                        Set default values for I/O and enable clock and reset system
+# UVVM: ID_SEQUENCER                     100.0 ns  TB seq.                        Activate async. reset for clk periods
+# UVVM: ID_SEQUENCER                     300.0 ns  TB seq.                        Testing TX
+# UVVM: ID_BFM                           335.0 ns  TB seq.                        avalon_mm_write(A:x"0", x"000000AA") completed. 'MM if Write transaction to UART data reg --
+# UVVM:                                                                           enabeling TX transaction'
+# UVVM: ID_BFM                         82830.0 ns  TB seq.                        uart_receive()=> x"AA". 'UART receive transaction'
+# UVVM: 
+# UVVM: =========================================================================================================================================================================
+# UVVM: ***  ERROR #1  ***
+# UVVM:     91510.555 ns   TB seq.
+# UVVM:                    await_value(std_logic 1, 0 ns, 8680.555 ns) => Failed. Timed out after 8680.555 ns. 'Interrupt expected'
+# UVVM: 
+# UVVM: Simulator has been paused as requested after 1 ERROR
+# UVVM: *** To find the root cause of this alert, step out the HDL calling stack in your simulator. ***
+# UVVM: *** For example, step out until you reach the call from the test sequencer. ***
+# UVVM: =========================================================================================================================================================================
+# UVVM: 
+# UVVM: 
+# ** Note: stop
+#    Time: 91510555 ps  Iteration: 0  Instance: /uart_tb
+# Break in Subprogram alert at UVVM_Light/src_util/methods_pkg.vhd line 3697
+# Compile of uart.vhd was successful.
+restart
+# ** Error: (vsim-13) Recompile work.uart_tb(sim) because work.uart has changed.
+vsim uart_tb.vhd
+# OpenFile uart_tb.vhd
+vcom -2008 uart_tb.vhd
+# Model Technology ModelSim - Intel FPGA Edition vcom 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 13:37:16 on Oct 19,2021
+# vcom -reportprogress 300 -2008 uart_tb.vhd 
+# -- Loading package STANDARD
+# -- Loading package TEXTIO
+# -- Loading package std_logic_1164
+# -- Loading package NUMERIC_STD
+# -- Loading context declaration uvvm_util_context
+# -- Loading package types_pkg
+# -- Loading package adaptations_pkg
+# -- Loading package MATH_REAL
+# -- Loading package string_methods_pkg
+# -- Loading package protected_types_pkg
+# -- Loading package global_signals_and_shared_variables_pkg
+# -- Loading package hierarchy_linked_list_pkg
+# -- Loading package license_pkg
+# -- Loading package ENV
+# -- Loading package alert_hierarchy_pkg
+# -- Loading package methods_pkg
+# -- Loading package bfm_common_pkg
+# -- Loading context declaration uvvm_util_context
+# -- Loading package uart_bfm_pkg
+# -- Loading context declaration uvvm_util_context
+# -- Loading package avalon_mm_bfm_pkg
+# -- Compiling entity uart_tb
+# -- Compiling architecture sim of uart_tb
+# -- Loading entity uart
+# End time: 13:37:16 on Oct 19,2021, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vsim uart_tb
+# vsim uart_tb 
+# Start time: 13:25:59 on Oct 19,2021
+# Error loading design
+# End time: 13:37:29 on Oct 19,2021, Elapsed time: 0:11:30
+# Errors: 1, Warnings: 1
