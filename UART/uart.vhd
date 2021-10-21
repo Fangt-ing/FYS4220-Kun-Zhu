@@ -24,9 +24,9 @@ entity uart is
         rdata : out std_logic_vector (31 downto 0);
 
         -- uart interface
-        rx  : in std_logic;
-        tx  : out std_logic;
-        irq : out std_logic := '0'
+        rx : in std_logic;
+        tx : out std_logic;
+        irq : out std_logic
 
     );
 end entity uart;
@@ -69,12 +69,8 @@ architecture rtl of uart is
     signal tx_busy       : std_logic; -- signal value comes from tx
     signal tx_busy_temp  : std_logic := '0';
     -- rx signals
-    signal rx_err       : std_logic := '0';
-    signal rx_busy      : std_logic;        -- signal value comes from rx 
-    signal rx_busy_temp : std_logic := '0'; -- to enable the irq
-    -- interrupt signals
-    signal tx_irq : std_logic := '0';
-    signal rx_irq : std_logic := '0';
+    signal rx_err  : std_logic := '0';
+    signal rx_busy : std_logic; -- signal value comes from rx 
 
 begin
 
@@ -108,35 +104,22 @@ begin
             tx_data_valid <= '0';
             rx_err        <= '0';
             tx_busy_temp  <= '0';
-            rx_busy_temp  <= '0';
             status        <= (others => '0');
-            tx_irq        <= '0';
-            rx_irq        <= '0';
-            irq           <= '0';
         end if;
         -- start the clk/ synchronization
         if rising_edge(clk) then
             tx_busy_temp <= tx_busy;
-            rx_busy_temp <= rx_busy;
-            -- assign the status bits to relevant values
+            -- assing the status bits to relevant values
             status(0) <= tx_data_valid;
             status(1) <= tx_busy;
             status(2) <= rx_busy;
             status(3) <= rx_err;
-            status(4) <= tx_irq;
-            status(5) <= rx_irq;
-            -- assign either irq to irq connected to CPU.
-            irq <= tx_irq or rx_irq;
             -- enable cpu --write--> to processor interface @ addr "00"
             if we = '1' then
                 if addr = "00" then
                     -- toggles tx_data_valid to enable the cpu writing to processor interface
                     tx_data_valid <= '1';
                     tx_data       <= wdata;
-                    -- get status value under "we" so to reset (write to) irqs
-                elsif addr = "10" then
-                    tx_irq <= '0';
-                    rx_irq <= '0';
                 end if;
             end if;
             -- enable cpu to read from processor interface
@@ -150,18 +133,13 @@ begin
                 end case;
             end if;
 
-            -- detect the flip-flop RISING EDGE to determine weather to transmit data to tx.
+            -- detect the flip-flop rising eadge to determine weather to transmit data to tx.
             if tx_busy_temp = '0' and tx_busy = '1' then
-                -- stops cpu to write further while tx_busy at the rising_edge, to stop new data from CPU --> tx
+                -- stops cpu to write further while tx_busy at the rising_edge
                 tx_data_valid <= '0';
-                -- only to interrupt at a FALLING EDGE (the current session from CPU --> tx is completed)
-            elsif tx_busy_temp = '1' and tx_busy = '0' then
-                tx_irq <= '1';
-            end if;
-
-            if rx_busy_temp = '1' and tx_busy = '0' then
-                -- whenever there's a falling edge, uart interrupts the CPU
-                rx_irq <= '1';
+            -- elsif tx_busy_temp = '1' and tx_busy = '0' then
+                -- tx_data_valid <= '0';
+                -- irq
             end if;
         end if;
     end process;
