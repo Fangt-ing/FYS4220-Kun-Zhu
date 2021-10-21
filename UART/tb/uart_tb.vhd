@@ -141,7 +141,7 @@ begin
             addr  => avalon_mm_if.address,
             wdata => avalon_mm_if.writedata,
             rdata => avalon_mm_if.readdata,
-            irq   => avalon_mm_if.irq,
+            irq   => irq,
             -- UART interface
             rx => rx,
             tx => tx
