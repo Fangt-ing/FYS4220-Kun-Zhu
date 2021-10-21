@@ -1,4 +1,4 @@
-# File: app.c
+// File: app.c
 
 #include <stdio.h>
 
