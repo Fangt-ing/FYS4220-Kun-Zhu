@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios2_system'
  * SOPC Builder design path: ../../quartus/nios2_system.sopcinfo
  *
- * Generated: Thu Oct 21 15:24:11 CEST 2021
+ * Generated: Mon Oct 25 16:21:35 CEST 2021
  */
 
 /*
@@ -135,6 +135,7 @@
 
 #define __ALTERA_AVALON_JTAG_UART
 #define __ALTERA_AVALON_ONCHIP_MEMORY2
+#define __ALTERA_AVALON_PIO
 #define __ALTERA_NIOS2_GEN2
 
 
@@ -154,19 +155,19 @@
 #define ALT_NUM_INTERNAL_INTERRUPT_CONTROLLERS 1
 #define ALT_NUM_INTERRUPT_CONTROLLERS 1
 #define ALT_STDERR "/dev/jtag_uart"
-#define ALT_STDERR_BASE 0x81000
+#define ALT_STDERR_BASE 0x81020
 #define ALT_STDERR_DEV jtag_uart
 #define ALT_STDERR_IS_JTAG_UART
 #define ALT_STDERR_PRESENT
 #define ALT_STDERR_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDIN "/dev/jtag_uart"
-#define ALT_STDIN_BASE 0x81000
+#define ALT_STDIN_BASE 0x81020
 #define ALT_STDIN_DEV jtag_uart
 #define ALT_STDIN_IS_JTAG_UART
 #define ALT_STDIN_PRESENT
 #define ALT_STDIN_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDOUT "/dev/jtag_uart"
-#define ALT_STDOUT_BASE 0x81000
+#define ALT_STDOUT_BASE 0x81020
 #define ALT_STDOUT_DEV jtag_uart
 #define ALT_STDOUT_IS_JTAG_UART
 #define ALT_STDOUT_PRESENT
@@ -191,8 +192,8 @@
  */
 
 #define ALT_MODULE_CLASS_jtag_uart altera_avalon_jtag_uart
-#define JTAG_UART_BASE 0x81000
-#define JTAG_UART_IRQ 5
+#define JTAG_UART_BASE 0x81020
+#define JTAG_UART_IRQ 16
 #define JTAG_UART_IRQ_INTERRUPT_CONTROLLER_ID 0
 #define JTAG_UART_NAME "/dev/jtag_uart"
 #define JTAG_UART_READ_DEPTH 64
@@ -230,5 +231,86 @@
 #define ONCHIP_MEM_SPAN 153600
 #define ONCHIP_MEM_TYPE "altera_avalon_onchip_memory2"
 #define ONCHIP_MEM_WRITABLE 1
+
+
+/*
+ * pio_irq configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_pio_irq altera_avalon_pio
+#define PIO_IRQ_BASE 0x0
+#define PIO_IRQ_BIT_CLEARING_EDGE_REGISTER 0
+#define PIO_IRQ_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define PIO_IRQ_CAPTURE 1
+#define PIO_IRQ_DATA_WIDTH 1
+#define PIO_IRQ_DO_TEST_BENCH_WIRING 0
+#define PIO_IRQ_DRIVEN_SIM_VALUE 0
+#define PIO_IRQ_EDGE_TYPE "FALLING"
+#define PIO_IRQ_FREQ 50000000
+#define PIO_IRQ_HAS_IN 1
+#define PIO_IRQ_HAS_OUT 0
+#define PIO_IRQ_HAS_TRI 0
+#define PIO_IRQ_IRQ 5
+#define PIO_IRQ_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define PIO_IRQ_IRQ_TYPE "EDGE"
+#define PIO_IRQ_NAME "/dev/pio_irq"
+#define PIO_IRQ_RESET_VALUE 0
+#define PIO_IRQ_SPAN 16
+#define PIO_IRQ_TYPE "altera_avalon_pio"
+
+
+/*
+ * pio_led configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_pio_led altera_avalon_pio
+#define PIO_LED_BASE 0x81010
+#define PIO_LED_BIT_CLEARING_EDGE_REGISTER 0
+#define PIO_LED_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define PIO_LED_CAPTURE 0
+#define PIO_LED_DATA_WIDTH 10
+#define PIO_LED_DO_TEST_BENCH_WIRING 0
+#define PIO_LED_DRIVEN_SIM_VALUE 0
+#define PIO_LED_EDGE_TYPE "NONE"
+#define PIO_LED_FREQ 50000000
+#define PIO_LED_HAS_IN 0
+#define PIO_LED_HAS_OUT 1
+#define PIO_LED_HAS_TRI 0
+#define PIO_LED_IRQ -1
+#define PIO_LED_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define PIO_LED_IRQ_TYPE "NONE"
+#define PIO_LED_NAME "/dev/pio_led"
+#define PIO_LED_RESET_VALUE 0
+#define PIO_LED_SPAN 16
+#define PIO_LED_TYPE "altera_avalon_pio"
+
+
+/*
+ * pio_sw configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_pio_sw altera_avalon_pio
+#define PIO_SW_BASE 0x81000
+#define PIO_SW_BIT_CLEARING_EDGE_REGISTER 0
+#define PIO_SW_BIT_MODIFYING_OUTPUT_REGISTER 0
+#define PIO_SW_CAPTURE 0
+#define PIO_SW_DATA_WIDTH 10
+#define PIO_SW_DO_TEST_BENCH_WIRING 0
+#define PIO_SW_DRIVEN_SIM_VALUE 0
+#define PIO_SW_EDGE_TYPE "NONE"
+#define PIO_SW_FREQ 50000000
+#define PIO_SW_HAS_IN 1
+#define PIO_SW_HAS_OUT 0
+#define PIO_SW_HAS_TRI 0
+#define PIO_SW_IRQ -1
+#define PIO_SW_IRQ_INTERRUPT_CONTROLLER_ID -1
+#define PIO_SW_IRQ_TYPE "NONE"
+#define PIO_SW_NAME "/dev/pio_sw"
+#define PIO_SW_RESET_VALUE 0
+#define PIO_SW_SPAN 16
+#define PIO_SW_TYPE "altera_avalon_pio"
 
 #endif /* __SYSTEM_H_ */
