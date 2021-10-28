@@ -79,7 +79,6 @@ set_location_assignment PIN_E14 -to pio_led_external_connection_export[6]
 set_location_assignment PIN_D14 -to pio_led_external_connection_export[7]
 set_location_assignment PIN_A11 -to pio_led_external_connection_export[8]
 set_location_assignment PIN_B11 -to pio_led_external_connection_export[9]
-set_location_assignment PIN_A7 -to irq
 set_location_assignment PIN_A7 -to irq[0]
 set_location_assignment PIN_V11 -to GSENSOR_SDI
 set_location_assignment PIN_V12 -to GSENSOR_SDO

@@ -35,24 +35,24 @@ architecture rtl of uart is
     -- declaration for tx ports
     component uart_tx is
         port (
-            clk           : in std_logic;                     -- 50 MHz system clock
-            arst_n        : in std_logic;                     -- Asynchronous active low reset
+            clk           : in std_logic; -- 50 MHz system clock
+            arst_n        : in std_logic; -- Asynchronous active low reset
             tx_data       : in std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
-            tx_data_valid : in std_logic;                     -- Valid data on tx_data. Start transmission.
-            tx_busy       : out std_logic;                    -- Module busy, transmission ongoing (active high)
-            tx            : out std_logic                     -- UART TX output
+            tx_data_valid : in std_logic; -- Valid data on tx_data. Start transmission.
+            tx_busy       : out std_logic; -- Module busy, transmission ongoing (active high)
+            tx            : out std_logic -- UART TX output
         );
     end component;
 
     -- declaration for rx ports
     component uart_rx is
         port (
-            clk     : in std_logic;                      -- 50 MHz system clock
-            arst_n  : in std_logic;                      -- Asynchronous active low reset
-            rx      : in std_logic;                      -- UART TX input
+            clk     : in std_logic; -- 50 MHz system clock
+            arst_n  : in std_logic; -- Asynchronous active low reset
+            rx      : in std_logic; -- UART TX input
             rx_data : out std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
-            rx_err  : out std_logic := '0';              -- Flag incorrect stop or start bit (active high). Reset on new reception
-            rx_busy : out std_logic                      -- Module busy, transmission ongoing (active high)
+            rx_err  : out std_logic := '0'; -- Flag incorrect stop or start bit (active high). Reset on new reception
+            rx_busy : out std_logic -- Module busy, transmission ongoing (active high)
         );
     end component;
 
@@ -70,7 +70,7 @@ architecture rtl of uart is
     signal tx_busy_temp  : std_logic := '0';
     -- rx signals
     signal rx_err       : std_logic := '0';
-    signal rx_busy      : std_logic;        -- signal value comes from rx 
+    signal rx_busy      : std_logic; -- signal value comes from rx 
     signal rx_busy_temp : std_logic := '0'; -- to enable the irq
     -- interrupt signals
     signal tx_irq : std_logic := '0';
@@ -78,29 +78,30 @@ architecture rtl of uart is
 
 begin
 
-    -- tx port map
-    tx_inst : uart_tx
-    port map(
-        clk           => clk,
-        arst_n        => arst_n,
-        tx_data       => tx_data(7 downto 0),
-        tx_data_valid => tx_data_valid,
-        tx_busy       => tx_busy,
-        tx            => tx
-    );
+    -- -- tx port map
+    -- tx_inst : uart_tx
+    -- port map(
+    --     clk           => clk,
+    --     arst_n        => arst_n,
+    --     tx_data       => tx_data(7 downto 0),
+    --     tx_data_valid => tx_data_valid,
+    --     tx_busy       => tx_busy,
+    --     tx            => tx
+    -- );
 
-    -- rx port map
-    rx_inst : uart_rx
-    port map(
-        clk     => clk,
-        arst_n  => arst_n,
-        rx      => rx,
-        rx_data => rx_data(7 downto 0),
-        rx_err  => rx_err,
-        rx_busy => rx_busy
-    );
+    -- -- rx port map
+    -- rx_inst : uart_rx
+    -- port map(
+    --     clk     => clk,
+    --     arst_n  => arst_n,
+    --     rx      => rx,
+    --     rx_data => rx_data(7 downto 0),
+    --     rx_err  => rx_err,
+    --     rx_busy => rx_busy
+    -- );
 
-    p_clk : process (clk)
+    -- arst_n in sesitivity list is necessary for the quartus to understand the process
+    p_clk : process (clk, arst_n)
     begin
         -- reset the signlas. 
         if arst_n = '0' then
@@ -113,9 +114,9 @@ begin
             tx_irq        <= '0';
             rx_irq        <= '0';
             irq           <= '0';
-        end if;
-        -- start the clk/ synchronization
-        if rising_edge(clk) then
+
+            -- start the clk/ synchronization
+        elsif rising_edge(clk) then
             tx_busy_temp <= tx_busy;
             rx_busy_temp <= rx_busy;
             -- assign the status bits to relevant values
@@ -133,15 +134,15 @@ begin
                     -- toggles tx_data_valid to enable the cpu writing to processor interface
                     tx_data_valid <= '1';
                     tx_data       <= wdata;
-                end if;
+
                     -- get status value under "we" so to reset (write to) irqs
-                if addr = "10" then
+                elsif addr = "10" then
                     tx_irq <= '0';
                     rx_irq <= '0';
                 end if;
-            end if;
-            -- enable cpu to read from processor interface
-            if re = '1' then
+                -- end if;
+                -- enable cpu to read from processor interface
+            elsif re = '1' then
                 case addr is
                     when "01" =>
                         rdata <= rx_data;
@@ -155,9 +156,9 @@ begin
             if tx_busy_temp = '0' and tx_busy = '1' then
                 -- stops cpu to write further while tx_busy at the rising_edge, to stop new data from CPU --> tx
                 tx_data_valid <= '0';
-            end if;
+                -- end if;
                 -- only to interrupt at a FALLING EDGE (the current session from CPU --> tx is completed)
-            if tx_busy_temp = '1' and tx_busy = '0' then
+            elsif tx_busy_temp = '1' and tx_busy = '0' then
                 tx_irq <= '1';
             end if;
 
