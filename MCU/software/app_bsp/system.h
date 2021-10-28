@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios2_system'
  * SOPC Builder design path: ../../quartus/nios2_system.sopcinfo
  *
- * Generated: Mon Oct 25 16:21:35 CEST 2021
+ * Generated: Thu Oct 28 12:59:20 CEST 2021
  */
 
 /*
@@ -136,7 +136,10 @@
 #define __ALTERA_AVALON_JTAG_UART
 #define __ALTERA_AVALON_ONCHIP_MEMORY2
 #define __ALTERA_AVALON_PIO
+#define __ALTERA_AVALON_SPI
+#define __ALTERA_AVALON_TIMER
 #define __ALTERA_NIOS2_GEN2
+#define __UART_BASIC
 
 
 /*
@@ -155,19 +158,19 @@
 #define ALT_NUM_INTERNAL_INTERRUPT_CONTROLLERS 1
 #define ALT_NUM_INTERRUPT_CONTROLLERS 1
 #define ALT_STDERR "/dev/jtag_uart"
-#define ALT_STDERR_BASE 0x81020
+#define ALT_STDERR_BASE 0x81080
 #define ALT_STDERR_DEV jtag_uart
 #define ALT_STDERR_IS_JTAG_UART
 #define ALT_STDERR_PRESENT
 #define ALT_STDERR_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDIN "/dev/jtag_uart"
-#define ALT_STDIN_BASE 0x81020
+#define ALT_STDIN_BASE 0x81080
 #define ALT_STDIN_DEV jtag_uart
 #define ALT_STDIN_IS_JTAG_UART
 #define ALT_STDIN_PRESENT
 #define ALT_STDIN_TYPE "altera_avalon_jtag_uart"
 #define ALT_STDOUT "/dev/jtag_uart"
-#define ALT_STDOUT_BASE 0x81020
+#define ALT_STDOUT_BASE 0x81080
 #define ALT_STDOUT_DEV jtag_uart
 #define ALT_STDOUT_IS_JTAG_UART
 #define ALT_STDOUT_PRESENT
@@ -182,7 +185,7 @@
 
 #define ALT_INCLUDE_INSTRUCTION_RELATED_EXCEPTION_API
 #define ALT_MAX_FD 32
-#define ALT_SYS_CLK none
+#define ALT_SYS_CLK SYS_CLK_TIMER
 #define ALT_TIMESTAMP_CLK none
 
 
@@ -192,7 +195,7 @@
  */
 
 #define ALT_MODULE_CLASS_jtag_uart altera_avalon_jtag_uart
-#define JTAG_UART_BASE 0x81020
+#define JTAG_UART_BASE 0x81080
 #define JTAG_UART_IRQ 16
 #define JTAG_UART_IRQ_INTERRUPT_CONTROLLER_ID 0
 #define JTAG_UART_NAME "/dev/jtag_uart"
@@ -239,11 +242,11 @@
  */
 
 #define ALT_MODULE_CLASS_pio_irq altera_avalon_pio
-#define PIO_IRQ_BASE 0x0
+#define PIO_IRQ_BASE 0x81050
 #define PIO_IRQ_BIT_CLEARING_EDGE_REGISTER 0
 #define PIO_IRQ_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define PIO_IRQ_CAPTURE 1
-#define PIO_IRQ_DATA_WIDTH 1
+#define PIO_IRQ_DATA_WIDTH 3
 #define PIO_IRQ_DO_TEST_BENCH_WIRING 0
 #define PIO_IRQ_DRIVEN_SIM_VALUE 0
 #define PIO_IRQ_EDGE_TYPE "FALLING"
@@ -266,7 +269,7 @@
  */
 
 #define ALT_MODULE_CLASS_pio_led altera_avalon_pio
-#define PIO_LED_BASE 0x81010
+#define PIO_LED_BASE 0x81070
 #define PIO_LED_BIT_CLEARING_EDGE_REGISTER 0
 #define PIO_LED_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define PIO_LED_CAPTURE 0
@@ -293,7 +296,7 @@
  */
 
 #define ALT_MODULE_CLASS_pio_sw altera_avalon_pio
-#define PIO_SW_BASE 0x81000
+#define PIO_SW_BASE 0x81060
 #define PIO_SW_BIT_CLEARING_EDGE_REGISTER 0
 #define PIO_SW_BIT_MODIFYING_OUTPUT_REGISTER 0
 #define PIO_SW_CAPTURE 0
@@ -312,5 +315,76 @@
 #define PIO_SW_RESET_VALUE 0
 #define PIO_SW_SPAN 16
 #define PIO_SW_TYPE "altera_avalon_pio"
+
+
+/*
+ * spi configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_spi altera_avalon_spi
+#define SPI_BASE 0x81020
+#define SPI_CLOCKMULT 1
+#define SPI_CLOCKPHASE 0
+#define SPI_CLOCKPOLARITY 0
+#define SPI_CLOCKUNITS "Hz"
+#define SPI_DATABITS 8
+#define SPI_DATAWIDTH 16
+#define SPI_DELAYMULT "1.0E-9"
+#define SPI_DELAYUNITS "ns"
+#define SPI_EXTRADELAY 0
+#define SPI_INSERT_SYNC 0
+#define SPI_IRQ 2
+#define SPI_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define SPI_ISMASTER 1
+#define SPI_LSBFIRST 0
+#define SPI_NAME "/dev/spi"
+#define SPI_NUMSLAVES 1
+#define SPI_PREFIX "spi_"
+#define SPI_SPAN 32
+#define SPI_SYNC_REG_DEPTH 2
+#define SPI_TARGETCLOCK 1000000u
+#define SPI_TARGETSSDELAY "0.0"
+#define SPI_TYPE "altera_avalon_spi"
+
+
+/*
+ * sys_clk_timer configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_sys_clk_timer altera_avalon_timer
+#define SYS_CLK_TIMER_ALWAYS_RUN 0
+#define SYS_CLK_TIMER_BASE 0x81000
+#define SYS_CLK_TIMER_COUNTER_SIZE 32
+#define SYS_CLK_TIMER_FIXED_PERIOD 0
+#define SYS_CLK_TIMER_FREQ 50000000
+#define SYS_CLK_TIMER_IRQ 1
+#define SYS_CLK_TIMER_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define SYS_CLK_TIMER_LOAD_VALUE 49999
+#define SYS_CLK_TIMER_MULT 0.001
+#define SYS_CLK_TIMER_NAME "/dev/sys_clk_timer"
+#define SYS_CLK_TIMER_PERIOD 1
+#define SYS_CLK_TIMER_PERIOD_UNITS "ms"
+#define SYS_CLK_TIMER_RESET_OUTPUT 0
+#define SYS_CLK_TIMER_SNAPSHOT 1
+#define SYS_CLK_TIMER_SPAN 32
+#define SYS_CLK_TIMER_TICKS_PER_SEC 1000
+#define SYS_CLK_TIMER_TIMEOUT_PULSE_OUTPUT 0
+#define SYS_CLK_TIMER_TYPE "altera_avalon_timer"
+
+
+/*
+ * uart_basic configuration
+ *
+ */
+
+#define ALT_MODULE_CLASS_uart_basic uart_basic
+#define UART_BASIC_BASE 0x81040
+#define UART_BASIC_IRQ 3
+#define UART_BASIC_IRQ_INTERRUPT_CONTROLLER_ID 0
+#define UART_BASIC_NAME "/dev/uart_basic"
+#define UART_BASIC_SPAN 16
+#define UART_BASIC_TYPE "uart_basic"
 
 #endif /* __SYSTEM_H_ */

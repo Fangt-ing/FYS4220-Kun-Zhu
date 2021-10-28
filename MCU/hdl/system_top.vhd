@@ -7,26 +7,41 @@ entity system_top is
         arst_n                             : in std_logic;
         pio_led_external_connection_export : out std_logic_vector(9 downto 0); -- export
         pio_sw_external_connection_export  : in std_logic_vector(9 downto 0) := (others => 'X'); -- export
-        irq                                : in std_logic -- KEY1
+        irq                                : in std_logic_vector(2 downto 0); -- KEY1
+
+        rx : in std_logic;
+        tx : out std_logic;
+
+        -- GENSOR_INT1  : in std_logic;
+        -- GENSOR_INT2  : in std_logic;
+        GSENSOR_CS_n : out std_logic;
+        GSENSOR_SCLK : out std_logic;
+        -- serial data input
+        GSENSOR_SDI : in std_logic;
+        -- serial data input and output
+        GSENSOR_SDO : out std_logic
     );
 end entity;
 
 architecture rtl of system_top is
-    -- signal CONNECTED_TO_clk_clk                            : std_logic;
-    -- signal CONNECTED_TO_reset_reset_n                      : std_logic;
-    -- signal CONNECTED_TO_pio_led_external_connection_export : std_logic_vector(9 downto 0) := "0000000000";
-    -- signal CONNECTED_TO_pio_sw_external_connection_export  : std_logic_vector(9 downto 0) := "0000000000";
-    
     component nios2_system is
         port (
-            clk_clk                            : in std_logic := 'X'; -- clk
-            reset_reset_n                      : in std_logic := 'X'; -- reset_n
+            clk_clk                            : in std_logic                    := 'X'; -- clk
+            pio_irq_external_connection_export : in std_logic_vector(2 downto 0) := (others => 'X'); -- export
             pio_led_external_connection_export : out std_logic_vector(9 downto 0); -- export
             pio_sw_external_connection_export  : in std_logic_vector(9 downto 0) := (others => 'X'); -- export
-            pio_irq_external_connection_export : in std_logic
+            reset_reset_n                      : in std_logic                    := 'X'; -- reset_n
+            spi_external_MISO                  : in std_logic                    := 'X'; -- MISO
+            spi_external_MOSI                  : out std_logic; -- MOSI
+            spi_external_SCLK                  : out std_logic; -- SCLK
+            spi_external_SS_n                  : out std_logic; -- SS_n
+            uart_basic_uart_rx                 : in std_logic := 'X'; -- rx
+            uart_basic_uart_tx                 : out std_logic -- tx
         );
     end component nios2_system;
-    signal irq_sync : std_logic_vector(1 downto 0);
+    -- changed to 4 bits
+    signal irq_sync_r1 : std_logic_vector(2 downto 0);
+    signal irq_sync_r2 : std_logic_vector(2 downto 0);
 
 begin
     -- The irq input signal is a button press which is asynchronous to the system clock
@@ -34,17 +49,25 @@ begin
     p_sync : process (clk)
     begin
         if rising_edge(clk) then
-            irq_sync <= irq_sync(0) & irq; --synchronization shift register
+            irq_sync_r1 <= irq; --synchronization shift register
+            irq_sync_r2 <= irq_sync_r1;
         end if;
     end process;
 
     u0 : component nios2_system
         port map(
             clk_clk                            => clk, --                         clk.clk
-            reset_reset_n                      => arst_n, --                       reset.reset_n
+            pio_irq_external_connection_export => irq_sync_r2, -- pio_irq_external_connection.export
             pio_led_external_connection_export => pio_led_external_connection_export, -- pio_led_external_connection.export
             pio_sw_external_connection_export  => pio_sw_external_connection_export, --  pio_sw_external_connection.export
-            pio_irq_external_connection_export => irq_sync(1)
+            reset_reset_n                      => arst_n, --                       reset.reset_n
+
+            spi_external_MISO  => GSENSOR_SDI, --                master in slave out
+            spi_external_MOSI  => GSENSOR_SDO, --                            master out slave in
+            spi_external_SCLK  => GSENSOR_SCLK, --                            .SCLK
+            spi_external_SS_n  => GSENSOR_CS_n, --                            .SS_n
+            uart_basic_uart_rx => rx, --             uart_basic_uart.rx
+            uart_basic_uart_tx => tx --                            .tx
         );
 
     end architecture;

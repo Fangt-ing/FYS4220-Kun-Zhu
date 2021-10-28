@@ -9,10 +9,16 @@ use IEEE.numeric_std.all;
 entity nios2_system is
 	port (
 		clk_clk                            : in  std_logic                    := '0';             --                         clk.clk
-		pio_irq_external_connection_export : in  std_logic                    := '0';             -- pio_irq_external_connection.export
+		pio_irq_external_connection_export : in  std_logic_vector(2 downto 0) := (others => '0'); -- pio_irq_external_connection.export
 		pio_led_external_connection_export : out std_logic_vector(9 downto 0);                    -- pio_led_external_connection.export
 		pio_sw_external_connection_export  : in  std_logic_vector(9 downto 0) := (others => '0'); --  pio_sw_external_connection.export
-		reset_reset_n                      : in  std_logic                    := '0'              --                       reset.reset_n
+		reset_reset_n                      : in  std_logic                    := '0';             --                       reset.reset_n
+		spi_external_MISO                  : in  std_logic                    := '0';             --                spi_external.MISO
+		spi_external_MOSI                  : out std_logic;                                       --                            .MOSI
+		spi_external_SCLK                  : out std_logic;                                       --                            .SCLK
+		spi_external_SS_n                  : out std_logic;                                       --                            .SS_n
+		uart_basic_uart_rx                 : in  std_logic                    := '0';             --             uart_basic_uart.rx
+		uart_basic_uart_tx                 : out std_logic                                        --                            .tx
 	);
 end entity nios2_system;
 
@@ -88,7 +94,7 @@ architecture rtl of nios2_system is
 			writedata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
 			chipselect : in  std_logic                     := 'X';             -- chipselect
 			readdata   : out std_logic_vector(31 downto 0);                    -- readdata
-			in_port    : in  std_logic                     := 'X';             -- export
+			in_port    : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- export
 			irq        : out std_logic                                         -- irq
 		);
 	end component nios2_system_pio_irq;
@@ -115,6 +121,56 @@ architecture rtl of nios2_system is
 			in_port  : in  std_logic_vector(9 downto 0)  := (others => 'X')  -- export
 		);
 	end component nios2_system_pio_sw;
+
+	component nios2_system_spi is
+		port (
+			clk           : in  std_logic                     := 'X';             -- clk
+			reset_n       : in  std_logic                     := 'X';             -- reset_n
+			data_from_cpu : in  std_logic_vector(15 downto 0) := (others => 'X'); -- writedata
+			data_to_cpu   : out std_logic_vector(15 downto 0);                    -- readdata
+			mem_addr      : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- address
+			read_n        : in  std_logic                     := 'X';             -- read_n
+			spi_select    : in  std_logic                     := 'X';             -- chipselect
+			write_n       : in  std_logic                     := 'X';             -- write_n
+			irq           : out std_logic;                                        -- irq
+			MISO          : in  std_logic                     := 'X';             -- export
+			MOSI          : out std_logic;                                        -- export
+			SCLK          : out std_logic;                                        -- export
+			SS_n          : out std_logic                                         -- export
+		);
+	end component nios2_system_spi;
+
+	component nios2_system_sys_clk_timer is
+		port (
+			clk        : in  std_logic                     := 'X';             -- clk
+			reset_n    : in  std_logic                     := 'X';             -- reset_n
+			address    : in  std_logic_vector(2 downto 0)  := (others => 'X'); -- address
+			writedata  : in  std_logic_vector(15 downto 0) := (others => 'X'); -- writedata
+			readdata   : out std_logic_vector(15 downto 0);                    -- readdata
+			chipselect : in  std_logic                     := 'X';             -- chipselect
+			write_n    : in  std_logic                     := 'X';             -- write_n
+			irq        : out std_logic                                         -- irq
+		);
+	end component nios2_system_sys_clk_timer;
+
+	component uart is
+		generic (
+			GC_SYSTEM_CLK : integer := 50000000;
+			GC_BAUD_RATE  : integer := 115200
+		);
+		port (
+			clk    : in  std_logic                     := 'X';             -- clk
+			rx     : in  std_logic                     := 'X';             -- rx
+			tx     : out std_logic;                                        -- tx
+			arst_n : in  std_logic                     := 'X';             -- reset_n
+			irq    : out std_logic;                                        -- irq
+			we     : in  std_logic                     := 'X';             -- write
+			re     : in  std_logic                     := 'X';             -- read
+			wdata  : in  std_logic_vector(31 downto 0) := (others => 'X'); -- writedata
+			addr   : in  std_logic_vector(1 downto 0)  := (others => 'X'); -- address
+			rdata  : out std_logic_vector(31 downto 0)                     -- readdata
+		);
+	end component uart;
 
 	component nios2_system_mm_interconnect_0 is
 		port (
@@ -165,7 +221,23 @@ architecture rtl of nios2_system is
 			pio_led_s1_writedata                    : out std_logic_vector(31 downto 0);                    -- writedata
 			pio_led_s1_chipselect                   : out std_logic;                                        -- chipselect
 			pio_sw_s1_address                       : out std_logic_vector(1 downto 0);                     -- address
-			pio_sw_s1_readdata                      : in  std_logic_vector(31 downto 0) := (others => 'X')  -- readdata
+			pio_sw_s1_readdata                      : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			spi_spi_control_port_address            : out std_logic_vector(2 downto 0);                     -- address
+			spi_spi_control_port_write              : out std_logic;                                        -- write
+			spi_spi_control_port_read               : out std_logic;                                        -- read
+			spi_spi_control_port_readdata           : in  std_logic_vector(15 downto 0) := (others => 'X'); -- readdata
+			spi_spi_control_port_writedata          : out std_logic_vector(15 downto 0);                    -- writedata
+			spi_spi_control_port_chipselect         : out std_logic;                                        -- chipselect
+			sys_clk_timer_s1_address                : out std_logic_vector(2 downto 0);                     -- address
+			sys_clk_timer_s1_write                  : out std_logic;                                        -- write
+			sys_clk_timer_s1_readdata               : in  std_logic_vector(15 downto 0) := (others => 'X'); -- readdata
+			sys_clk_timer_s1_writedata              : out std_logic_vector(15 downto 0);                    -- writedata
+			sys_clk_timer_s1_chipselect             : out std_logic;                                        -- chipselect
+			uart_basic_avalon_slave_address         : out std_logic_vector(1 downto 0);                     -- address
+			uart_basic_avalon_slave_write           : out std_logic;                                        -- write
+			uart_basic_avalon_slave_read            : out std_logic;                                        -- read
+			uart_basic_avalon_slave_readdata        : in  std_logic_vector(31 downto 0) := (others => 'X'); -- readdata
+			uart_basic_avalon_slave_writedata       : out std_logic_vector(31 downto 0)                     -- writedata
 		);
 	end component nios2_system_mm_interconnect_0;
 
@@ -175,6 +247,9 @@ architecture rtl of nios2_system is
 			reset         : in  std_logic                     := 'X'; -- reset
 			receiver0_irq : in  std_logic                     := 'X'; -- irq
 			receiver1_irq : in  std_logic                     := 'X'; -- irq
+			receiver2_irq : in  std_logic                     := 'X'; -- irq
+			receiver3_irq : in  std_logic                     := 'X'; -- irq
+			receiver4_irq : in  std_logic                     := 'X'; -- irq
 			sender_irq    : out std_logic_vector(31 downto 0)         -- irq
 		);
 	end component nios2_system_irq_mapper;
@@ -264,6 +339,11 @@ architecture rtl of nios2_system is
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_read            : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_read -> mm_interconnect_0_jtag_uart_avalon_jtag_slave_read:in
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write           : std_logic;                     -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_write -> mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:in
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata       : std_logic_vector(31 downto 0); -- mm_interconnect_0:jtag_uart_avalon_jtag_slave_writedata -> jtag_uart:av_writedata
+	signal mm_interconnect_0_uart_basic_avalon_slave_readdata            : std_logic_vector(31 downto 0); -- uart_basic:rdata -> mm_interconnect_0:uart_basic_avalon_slave_readdata
+	signal mm_interconnect_0_uart_basic_avalon_slave_address             : std_logic_vector(1 downto 0);  -- mm_interconnect_0:uart_basic_avalon_slave_address -> uart_basic:addr
+	signal mm_interconnect_0_uart_basic_avalon_slave_read                : std_logic;                     -- mm_interconnect_0:uart_basic_avalon_slave_read -> uart_basic:re
+	signal mm_interconnect_0_uart_basic_avalon_slave_write               : std_logic;                     -- mm_interconnect_0:uart_basic_avalon_slave_write -> uart_basic:we
+	signal mm_interconnect_0_uart_basic_avalon_slave_writedata           : std_logic_vector(31 downto 0); -- mm_interconnect_0:uart_basic_avalon_slave_writedata -> uart_basic:wdata
 	signal mm_interconnect_0_cpu_debug_mem_slave_readdata                : std_logic_vector(31 downto 0); -- cpu:debug_mem_slave_readdata -> mm_interconnect_0:cpu_debug_mem_slave_readdata
 	signal mm_interconnect_0_cpu_debug_mem_slave_waitrequest             : std_logic;                     -- cpu:debug_mem_slave_waitrequest -> mm_interconnect_0:cpu_debug_mem_slave_waitrequest
 	signal mm_interconnect_0_cpu_debug_mem_slave_debugaccess             : std_logic;                     -- mm_interconnect_0:cpu_debug_mem_slave_debugaccess -> cpu:debug_mem_slave_debugaccess
@@ -291,8 +371,22 @@ architecture rtl of nios2_system is
 	signal mm_interconnect_0_pio_irq_s1_address                          : std_logic_vector(1 downto 0);  -- mm_interconnect_0:pio_irq_s1_address -> pio_irq:address
 	signal mm_interconnect_0_pio_irq_s1_write                            : std_logic;                     -- mm_interconnect_0:pio_irq_s1_write -> mm_interconnect_0_pio_irq_s1_write:in
 	signal mm_interconnect_0_pio_irq_s1_writedata                        : std_logic_vector(31 downto 0); -- mm_interconnect_0:pio_irq_s1_writedata -> pio_irq:writedata
-	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver0_irq
-	signal irq_mapper_receiver1_irq                                      : std_logic;                     -- pio_irq:irq -> irq_mapper:receiver1_irq
+	signal mm_interconnect_0_sys_clk_timer_s1_chipselect                 : std_logic;                     -- mm_interconnect_0:sys_clk_timer_s1_chipselect -> sys_clk_timer:chipselect
+	signal mm_interconnect_0_sys_clk_timer_s1_readdata                   : std_logic_vector(15 downto 0); -- sys_clk_timer:readdata -> mm_interconnect_0:sys_clk_timer_s1_readdata
+	signal mm_interconnect_0_sys_clk_timer_s1_address                    : std_logic_vector(2 downto 0);  -- mm_interconnect_0:sys_clk_timer_s1_address -> sys_clk_timer:address
+	signal mm_interconnect_0_sys_clk_timer_s1_write                      : std_logic;                     -- mm_interconnect_0:sys_clk_timer_s1_write -> mm_interconnect_0_sys_clk_timer_s1_write:in
+	signal mm_interconnect_0_sys_clk_timer_s1_writedata                  : std_logic_vector(15 downto 0); -- mm_interconnect_0:sys_clk_timer_s1_writedata -> sys_clk_timer:writedata
+	signal mm_interconnect_0_spi_spi_control_port_chipselect             : std_logic;                     -- mm_interconnect_0:spi_spi_control_port_chipselect -> spi:spi_select
+	signal mm_interconnect_0_spi_spi_control_port_readdata               : std_logic_vector(15 downto 0); -- spi:data_to_cpu -> mm_interconnect_0:spi_spi_control_port_readdata
+	signal mm_interconnect_0_spi_spi_control_port_address                : std_logic_vector(2 downto 0);  -- mm_interconnect_0:spi_spi_control_port_address -> spi:mem_addr
+	signal mm_interconnect_0_spi_spi_control_port_read                   : std_logic;                     -- mm_interconnect_0:spi_spi_control_port_read -> mm_interconnect_0_spi_spi_control_port_read:in
+	signal mm_interconnect_0_spi_spi_control_port_write                  : std_logic;                     -- mm_interconnect_0:spi_spi_control_port_write -> mm_interconnect_0_spi_spi_control_port_write:in
+	signal mm_interconnect_0_spi_spi_control_port_writedata              : std_logic_vector(15 downto 0); -- mm_interconnect_0:spi_spi_control_port_writedata -> spi:data_from_cpu
+	signal irq_mapper_receiver0_irq                                      : std_logic;                     -- uart_basic:irq -> irq_mapper:receiver0_irq
+	signal irq_mapper_receiver1_irq                                      : std_logic;                     -- jtag_uart:av_irq -> irq_mapper:receiver1_irq
+	signal irq_mapper_receiver2_irq                                      : std_logic;                     -- pio_irq:irq -> irq_mapper:receiver2_irq
+	signal irq_mapper_receiver3_irq                                      : std_logic;                     -- spi:irq -> irq_mapper:receiver3_irq
+	signal irq_mapper_receiver4_irq                                      : std_logic;                     -- sys_clk_timer:irq -> irq_mapper:receiver4_irq
 	signal cpu_irq_irq                                                   : std_logic_vector(31 downto 0); -- irq_mapper:sender_irq -> cpu:irq
 	signal rst_controller_reset_out_reset                                : std_logic;                     -- rst_controller:reset_out -> [irq_mapper:reset, mm_interconnect_0:cpu_reset_reset_bridge_in_reset_reset, onchip_mem:reset, rst_controller_reset_out_reset:in, rst_translator:in_reset]
 	signal rst_controller_reset_out_reset_req                            : std_logic;                     -- rst_controller:reset_req -> [cpu:reset_req, onchip_mem:reset_req, rst_translator:reset_req_in]
@@ -301,7 +395,10 @@ architecture rtl of nios2_system is
 	signal mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv : std_logic;                     -- mm_interconnect_0_jtag_uart_avalon_jtag_slave_write:inv -> jtag_uart:av_write_n
 	signal mm_interconnect_0_pio_led_s1_write_ports_inv                  : std_logic;                     -- mm_interconnect_0_pio_led_s1_write:inv -> pio_led:write_n
 	signal mm_interconnect_0_pio_irq_s1_write_ports_inv                  : std_logic;                     -- mm_interconnect_0_pio_irq_s1_write:inv -> pio_irq:write_n
-	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [cpu:reset_n, jtag_uart:rst_n, pio_irq:reset_n, pio_led:reset_n, pio_sw:reset_n]
+	signal mm_interconnect_0_sys_clk_timer_s1_write_ports_inv            : std_logic;                     -- mm_interconnect_0_sys_clk_timer_s1_write:inv -> sys_clk_timer:write_n
+	signal mm_interconnect_0_spi_spi_control_port_read_ports_inv         : std_logic;                     -- mm_interconnect_0_spi_spi_control_port_read:inv -> spi:read_n
+	signal mm_interconnect_0_spi_spi_control_port_write_ports_inv        : std_logic;                     -- mm_interconnect_0_spi_spi_control_port_write:inv -> spi:write_n
+	signal rst_controller_reset_out_reset_ports_inv                      : std_logic;                     -- rst_controller_reset_out_reset:inv -> [cpu:reset_n, jtag_uart:rst_n, pio_irq:reset_n, pio_led:reset_n, pio_sw:reset_n, spi:reset_n, sys_clk_timer:reset_n, uart_basic:arst_n]
 
 begin
 
@@ -346,7 +443,7 @@ begin
 			av_write_n     => mm_interconnect_0_jtag_uart_avalon_jtag_slave_write_ports_inv, --                  .write_n
 			av_writedata   => mm_interconnect_0_jtag_uart_avalon_jtag_slave_writedata,       --                  .writedata
 			av_waitrequest => mm_interconnect_0_jtag_uart_avalon_jtag_slave_waitrequest,     --                  .waitrequest
-			av_irq         => irq_mapper_receiver0_irq                                       --               irq.irq
+			av_irq         => irq_mapper_receiver1_irq                                       --               irq.irq
 		);
 
 	onchip_mem : component nios2_system_onchip_mem
@@ -374,7 +471,7 @@ begin
 			chipselect => mm_interconnect_0_pio_irq_s1_chipselect,      --                    .chipselect
 			readdata   => mm_interconnect_0_pio_irq_s1_readdata,        --                    .readdata
 			in_port    => pio_irq_external_connection_export,           -- external_connection.export
-			irq        => irq_mapper_receiver1_irq                      --                 irq.irq
+			irq        => irq_mapper_receiver2_irq                      --                 irq.irq
 		);
 
 	pio_led : component nios2_system_pio_led
@@ -396,6 +493,53 @@ begin
 			address  => mm_interconnect_0_pio_sw_s1_address,      --                  s1.address
 			readdata => mm_interconnect_0_pio_sw_s1_readdata,     --                    .readdata
 			in_port  => pio_sw_external_connection_export         -- external_connection.export
+		);
+
+	spi : component nios2_system_spi
+		port map (
+			clk           => clk_clk,                                                --              clk.clk
+			reset_n       => rst_controller_reset_out_reset_ports_inv,               --            reset.reset_n
+			data_from_cpu => mm_interconnect_0_spi_spi_control_port_writedata,       -- spi_control_port.writedata
+			data_to_cpu   => mm_interconnect_0_spi_spi_control_port_readdata,        --                 .readdata
+			mem_addr      => mm_interconnect_0_spi_spi_control_port_address,         --                 .address
+			read_n        => mm_interconnect_0_spi_spi_control_port_read_ports_inv,  --                 .read_n
+			spi_select    => mm_interconnect_0_spi_spi_control_port_chipselect,      --                 .chipselect
+			write_n       => mm_interconnect_0_spi_spi_control_port_write_ports_inv, --                 .write_n
+			irq           => irq_mapper_receiver3_irq,                               --              irq.irq
+			MISO          => spi_external_MISO,                                      --         external.export
+			MOSI          => spi_external_MOSI,                                      --                 .export
+			SCLK          => spi_external_SCLK,                                      --                 .export
+			SS_n          => spi_external_SS_n                                       --                 .export
+		);
+
+	sys_clk_timer : component nios2_system_sys_clk_timer
+		port map (
+			clk        => clk_clk,                                            --   clk.clk
+			reset_n    => rst_controller_reset_out_reset_ports_inv,           -- reset.reset_n
+			address    => mm_interconnect_0_sys_clk_timer_s1_address,         --    s1.address
+			writedata  => mm_interconnect_0_sys_clk_timer_s1_writedata,       --      .writedata
+			readdata   => mm_interconnect_0_sys_clk_timer_s1_readdata,        --      .readdata
+			chipselect => mm_interconnect_0_sys_clk_timer_s1_chipselect,      --      .chipselect
+			write_n    => mm_interconnect_0_sys_clk_timer_s1_write_ports_inv, --      .write_n
+			irq        => irq_mapper_receiver4_irq                            --   irq.irq
+		);
+
+	uart_basic : component uart
+		generic map (
+			GC_SYSTEM_CLK => 50000000,
+			GC_BAUD_RATE  => 115200
+		)
+		port map (
+			clk    => clk_clk,                                             --            clock.clk
+			rx     => uart_basic_uart_rx,                                  --             uart.rx
+			tx     => uart_basic_uart_tx,                                  --                 .tx
+			arst_n => rst_controller_reset_out_reset_ports_inv,            --       reset_sink.reset_n
+			irq    => irq_mapper_receiver0_irq,                            -- interrupt_sender.irq
+			we     => mm_interconnect_0_uart_basic_avalon_slave_write,     --     avalon_slave.write
+			re     => mm_interconnect_0_uart_basic_avalon_slave_read,      --                 .read
+			wdata  => mm_interconnect_0_uart_basic_avalon_slave_writedata, --                 .writedata
+			addr   => mm_interconnect_0_uart_basic_avalon_slave_address,   --                 .address
+			rdata  => mm_interconnect_0_uart_basic_avalon_slave_readdata   --                 .readdata
 		);
 
 	mm_interconnect_0 : component nios2_system_mm_interconnect_0
@@ -447,7 +591,23 @@ begin
 			pio_led_s1_writedata                    => mm_interconnect_0_pio_led_s1_writedata,                    --                                .writedata
 			pio_led_s1_chipselect                   => mm_interconnect_0_pio_led_s1_chipselect,                   --                                .chipselect
 			pio_sw_s1_address                       => mm_interconnect_0_pio_sw_s1_address,                       --                       pio_sw_s1.address
-			pio_sw_s1_readdata                      => mm_interconnect_0_pio_sw_s1_readdata                       --                                .readdata
+			pio_sw_s1_readdata                      => mm_interconnect_0_pio_sw_s1_readdata,                      --                                .readdata
+			spi_spi_control_port_address            => mm_interconnect_0_spi_spi_control_port_address,            --            spi_spi_control_port.address
+			spi_spi_control_port_write              => mm_interconnect_0_spi_spi_control_port_write,              --                                .write
+			spi_spi_control_port_read               => mm_interconnect_0_spi_spi_control_port_read,               --                                .read
+			spi_spi_control_port_readdata           => mm_interconnect_0_spi_spi_control_port_readdata,           --                                .readdata
+			spi_spi_control_port_writedata          => mm_interconnect_0_spi_spi_control_port_writedata,          --                                .writedata
+			spi_spi_control_port_chipselect         => mm_interconnect_0_spi_spi_control_port_chipselect,         --                                .chipselect
+			sys_clk_timer_s1_address                => mm_interconnect_0_sys_clk_timer_s1_address,                --                sys_clk_timer_s1.address
+			sys_clk_timer_s1_write                  => mm_interconnect_0_sys_clk_timer_s1_write,                  --                                .write
+			sys_clk_timer_s1_readdata               => mm_interconnect_0_sys_clk_timer_s1_readdata,               --                                .readdata
+			sys_clk_timer_s1_writedata              => mm_interconnect_0_sys_clk_timer_s1_writedata,              --                                .writedata
+			sys_clk_timer_s1_chipselect             => mm_interconnect_0_sys_clk_timer_s1_chipselect,             --                                .chipselect
+			uart_basic_avalon_slave_address         => mm_interconnect_0_uart_basic_avalon_slave_address,         --         uart_basic_avalon_slave.address
+			uart_basic_avalon_slave_write           => mm_interconnect_0_uart_basic_avalon_slave_write,           --                                .write
+			uart_basic_avalon_slave_read            => mm_interconnect_0_uart_basic_avalon_slave_read,            --                                .read
+			uart_basic_avalon_slave_readdata        => mm_interconnect_0_uart_basic_avalon_slave_readdata,        --                                .readdata
+			uart_basic_avalon_slave_writedata       => mm_interconnect_0_uart_basic_avalon_slave_writedata        --                                .writedata
 		);
 
 	irq_mapper : component nios2_system_irq_mapper
@@ -456,6 +616,9 @@ begin
 			reset         => rst_controller_reset_out_reset, -- clk_reset.reset
 			receiver0_irq => irq_mapper_receiver0_irq,       -- receiver0.irq
 			receiver1_irq => irq_mapper_receiver1_irq,       -- receiver1.irq
+			receiver2_irq => irq_mapper_receiver2_irq,       -- receiver2.irq
+			receiver3_irq => irq_mapper_receiver3_irq,       -- receiver3.irq
+			receiver4_irq => irq_mapper_receiver4_irq,       -- receiver4.irq
 			sender_irq    => cpu_irq_irq                     --    sender.irq
 		);
 
@@ -533,6 +696,12 @@ begin
 	mm_interconnect_0_pio_led_s1_write_ports_inv <= not mm_interconnect_0_pio_led_s1_write;
 
 	mm_interconnect_0_pio_irq_s1_write_ports_inv <= not mm_interconnect_0_pio_irq_s1_write;
+
+	mm_interconnect_0_sys_clk_timer_s1_write_ports_inv <= not mm_interconnect_0_sys_clk_timer_s1_write;
+
+	mm_interconnect_0_spi_spi_control_port_read_ports_inv <= not mm_interconnect_0_spi_spi_control_port_read;
+
+	mm_interconnect_0_spi_spi_control_port_write_ports_inv <= not mm_interconnect_0_spi_spi_control_port_write;
 
 	rst_controller_reset_out_reset_ports_inv <= not rst_controller_reset_out_reset;
 

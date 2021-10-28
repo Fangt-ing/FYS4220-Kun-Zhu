@@ -154,8 +154,9 @@ begin
             if tx_busy_temp = '0' and tx_busy = '1' then
                 -- stops cpu to write further while tx_busy at the rising_edge, to stop new data from CPU --> tx
                 tx_data_valid <= '0';
+            end if;
                 -- only to interrupt at a FALLING EDGE (the current session from CPU --> tx is completed)
-            elsif tx_busy_temp = '1' and tx_busy = '0' then
+            if tx_busy_temp = '1' and tx_busy = '0' then
                 tx_irq <= '1';
             end if;
 
