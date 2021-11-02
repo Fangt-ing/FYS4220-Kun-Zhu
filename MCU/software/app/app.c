@@ -14,6 +14,7 @@ is controlled from HW and not SW. The compile will therefor not
 find any code that controls this variable, and if not declared as
 volatile, the compile may decided to optimize and remove this variable. */
 volatile int edge_capture;
+volatile int uart_status;
 
 /* This is the ISR which will be called when the system signals an interrupt. */
 static void handle_interrupts(void *context)
@@ -30,6 +31,21 @@ static void handle_interrupts(void *context)
 
     // Write to edge capture register to reset it
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE, 0);
+}
+
+static void handle_interrupt_uart(void *context)
+{
+    // Cast context to edge_capture's type
+    // Volatile to avoid compiler optimization
+    // this will point to the edge_capture variable.
+    volatile int *uart_status_ptr = (volatile int *)context;
+
+    // Read the edge capture register on the PIO and store the value
+    // The value will be stored in the edge_capture variable and accessible
+    // from other parts of the code.
+    *uart_status_ptr = IORD(UART_STATUS_BASE, 2);
+    // Write to edge capture register to reset it
+    IOWR(UART_STATUS_BASE, 2, 0);
 }
 
 /* This function is used to initializes and registers the interrupt handler. */
@@ -54,13 +70,17 @@ static void init_interrupt_pio()
     it is important to keep interrupt routines short. If additional processing is necessary for a
     particular interrupt, it is better to do this outside of the ISR. E.g., checking the value
     of the edge_capture variable.*/
+
+    void *uart_status_ptr = (void *)&uart_status;
+    alt_ic_isr_register(UART_BASIC_IRQ_INTERRUPT_CONTROLLER_ID,
+			UART_BASIC_IRQ, handle_interrupt_uart, uart_status_ptr, 0x0);
 }
 
 int main()
 {
     printf("Hello, World!\n");
     int sw_data = 1;
-
+    int read_data = 1;
     // Initialize the interrupt
     init_interrupt_pio();
 
@@ -81,6 +101,16 @@ int main()
             printf("Interrupt detected, Key1 was pressed!\n");
             edge_capture = 0; // reset variable to "unregister" event
         }
+
+        //Check if rx_irq bit is set
+        if ((uart_status >> 5) & 0x1)
+        // >> sing is for shifting in the memory
+        {
+            // read tx_data register and write the returned value to the tx_data register
+        read_data = IORD(UART_BASIC_BASE, 1)
+        IOWR(UART_BASIC_BASE, 0, read_data)
+        }
+        // Reset the status registers IRQ bits.
 
         usleep(100000); // sleep 100 us
     }
