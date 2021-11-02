@@ -5,6 +5,10 @@
 #include "altera_avalon_pio_regs.h" //access to PIO macros
 #include <sys/alt_irq.h>            // access to the IRQ routines
 
+// spi moduel
+#include "alt_types.h"
+#include "altera_avalon_spi.h"
+
 /* Declare a global variable to holds the edge capture value
 Declaring a variable as volatile tells the compiler that
 the value of the variable may change at any time without
