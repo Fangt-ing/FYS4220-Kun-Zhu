@@ -14,6 +14,8 @@ MAX 10 FPGA device support
 * UART, personal tailored UART module.
 * MCU, a microcontroller module using UART protocol for communicating between hardware and software.
 * RTOS, real-time OS that reads from the onboard accelorometer.
+* Description of each tasks and learning materials are listed on this link:
+https://pages.github.uio.no/fys4220/fys4220/welcome.html
 
 
 ## Basic system with JTAG UART 
