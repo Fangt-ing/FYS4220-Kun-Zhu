@@ -47,9 +47,9 @@ static void handle_interrupt_uart(void *context)
     // Read the edge capture register on the PIO and store the value
     // The value will be stored in the edge_capture variable and accessible
     // from other parts of the code.
-    *uart_status_ptr = IORD(UART_STATUS_BASE, 2);
+    *uart_status_ptr = IORD(UART_BASIC_BASE, 2);
     // Write to edge capture register to reset it
-    IOWR(UART_STATUS_BASE, 2, 0);
+    IOWR(UART_BASIC_BASE, 2, 0);
 }
 
 /* This function is used to initializes and registers the interrupt handler. */
@@ -77,7 +77,7 @@ static void init_interrupt_pio()
 
     void *uart_status_ptr = (void *)&uart_status;
     alt_ic_isr_register(UART_BASIC_IRQ_INTERRUPT_CONTROLLER_ID,
-			UART_BASIC_IRQ, handle_interrupt_uart, uart_status_ptr, 0x0);
+                        UART_BASIC_IRQ, handle_interrupt_uart, uart_status_ptr, 0x0);
 }
 
 int main()
@@ -108,11 +108,11 @@ int main()
 
         //Check if rx_irq bit is set
         if ((uart_status >> 5) & 0x1)
-        // >> sing is for shifting in the memory
+        // >> sign is for shifting in the memory
         {
             // read tx_data register and write the returned value to the tx_data register
-        read_data = IORD(UART_BASIC_BASE, 1)
-        IOWR(UART_BASIC_BASE, 0, read_data)
+            read_data = IORD(UART_BASIC_BASE, 1);
+            IOWR(UART_BASIC_BASE, 0, read_data);
         }
         // Reset the status registers IRQ bits.
 

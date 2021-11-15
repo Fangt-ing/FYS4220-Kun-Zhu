@@ -5,11 +5,11 @@ use ieee.std_logic_1164.all;
 
 entity uart_rx is
   port (
-    clk     : in std_logic; -- 50 MHz system clock
-    arst_n  : in std_logic; -- Asynchronous active low reset
-    rx      : in std_logic; -- UART TX input
+    clk : in std_logic; -- 50 MHz system clock
+    arst_n : in std_logic; -- Asynchronous active low reset
+    rx : in std_logic; -- UART TX input
     rx_data : out std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
-    rx_err  : out std_logic := '0'; -- Flag incorrect stop or start bit (active high). Reset on new reception
+    rx_err : out std_logic := '0'; -- Flag incorrect stop or start bit (active high). Reset on new reception
     rx_busy : out std_logic -- Module busy, transmission ongoing (active high)
   );
 end entity;
@@ -36,23 +36,25 @@ begin
     variable sample1 : std_logic := '1';
     -- variable sample2 : std_logic := '1'; not necessary.
   begin
-    if rising_edge(clk) then
+    if arst_n = '0' then
+      rx_state <= SIdle;
+    elsif rising_edge(clk) then
       case rx_state is
         when SIdle =>
           -- rx_err   <= '0';
-          rx_busy  <= '0';
+          rx_busy <= '0';
           baud_cnt <= 0;
-          bit_cnt  <= 0;
+          bit_cnt <= 0;
           -- sample1  <= '1'; not signal, can't be defined in state.
           -- sample2  <= '1';
           if rx = '0' then
             rx_state <= SReceive;
-            rx_busy  <= '1';
+            rx_busy <= '1';
+            rx_err <= '0';
           end if;
 
         when SReceive =>
-          rx_err   <= '0';
-          rx_busy  <= '1';
+          rx_busy <= '1';
           baud_cnt <= baud_cnt + 1;
           if baud_cnt = bit_period/3 then
             sample1 := rx;
@@ -61,25 +63,21 @@ begin
             if sample1 = rx then
               rx_buffer(bit_cnt) <= rx;
             else
-              rx_err   <= '1';
+              rx_err <= '1';
               rx_state <= SIdle;
             end if;
           end if;
 
           if baud_cnt = bit_period then
             baud_cnt <= 0;
-            bit_cnt  <= bit_cnt + 1;
+            bit_cnt <= bit_cnt + 1;
             -- rx_data(bit_cnt) <= rx_buffer(bit_cnt + 1);
           end if;
           if bit_cnt = 10 then
             rx_state <= SIdle;
-            rx_data  <= rx_buffer(8 downto 1);
+            rx_data <= rx_buffer(8 downto 1);
           end if;
       end case;
-    end if;
-
-    if arst_n = '0' then
-      rx_state <= SIdle;
     end if;
   end process;
 end architecture;

@@ -60,7 +60,7 @@ architecture rtl of uart is
     -- wdata --> tx_data --> tx
     signal tx_data : std_logic_vector(31 downto 0);
     -- rdata <-- rx_data <-- rx
-    signal rx_data : std_logic_vector(31 downto 0);
+    signal rx_data : std_logic_vector(31 downto 0) := (others => '0');
     -- status(0) --> data_valid,  status(1) --> tx_busy, 
     -- status(2) --> rx_busy, status(3) --> rx_err
     signal status : std_logic_vector(31 downto 0);
@@ -78,27 +78,27 @@ architecture rtl of uart is
 
 begin
 
-    -- -- tx port map
-    -- tx_inst : uart_tx
-    -- port map(
-    --     clk           => clk,
-    --     arst_n        => arst_n,
-    --     tx_data       => tx_data(7 downto 0),
-    --     tx_data_valid => tx_data_valid,
-    --     tx_busy       => tx_busy,
-    --     tx            => tx
-    -- );
+    -- tx port map
+    tx_inst : uart_tx
+    port map(
+        clk           => clk,
+        arst_n        => arst_n,
+        tx_data       => tx_data(7 downto 0),
+        tx_data_valid => tx_data_valid,
+        tx_busy       => tx_busy,
+        tx            => tx
+    );
 
-    -- -- rx port map
-    -- rx_inst : uart_rx
-    -- port map(
-    --     clk     => clk,
-    --     arst_n  => arst_n,
-    --     rx      => rx,
-    --     rx_data => rx_data(7 downto 0),
-    --     rx_err  => rx_err,
-    --     rx_busy => rx_busy
-    -- );
+    -- rx port map
+    rx_inst : uart_rx
+    port map(
+        clk     => clk,
+        arst_n  => arst_n,
+        rx      => rx,
+        rx_data => rx_data(7 downto 0),
+        rx_err  => rx_err,
+        rx_busy => rx_busy
+    );
 
     -- arst_n in sesitivity list is necessary for the quartus to understand the process
     p_clk : process (clk, arst_n)
@@ -107,7 +107,7 @@ begin
         if arst_n = '0' then
             tx_data       <= (others => '0');
             tx_data_valid <= '0';
-            rx_err        <= '0';
+            -- rx_err        <= '0';
             tx_busy_temp  <= '0';
             rx_busy_temp  <= '0';
             status        <= (others => '0');

@@ -2,8 +2,8 @@
 <sch:Settings xmlns:sch="http://www.altera.com/embeddedsw/bsp/schema">
         <BspType>ucosii</BspType>
         <BspVersion>default</BspVersion>
-        <BspGeneratedTimeStamp>04.nov.2021 14:58:59</BspGeneratedTimeStamp>
-        <BspGeneratedUnixTimeStamp>1636034339303</BspGeneratedUnixTimeStamp>
+        <BspGeneratedTimeStamp>15.nov.2021 17:56:12</BspGeneratedTimeStamp>
+        <BspGeneratedUnixTimeStamp>1636995372257</BspGeneratedUnixTimeStamp>
         <BspGeneratedLocation>.\</BspGeneratedLocation>
         <BspSettingsFile>app_rtos_bsp\settings.bsp</BspSettingsFile>
         <SopcDesignFile>..\..\quartus\nios2_system.sopcinfo</SopcDesignFile>

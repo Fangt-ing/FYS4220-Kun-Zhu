@@ -6,7 +6,7 @@ entity system_top is
         clk                                : in std_logic;
         arst_n                             : in std_logic;
         pio_led_external_connection_export : out std_logic_vector(9 downto 0); -- export
-        pio_sw_external_connection_export  : in std_logic_vector(9 downto 0) := (others => 'X'); -- export
+        pio_sw_external_connection_export  : in std_logic_vector(9 downto 0) := (others => '0'); -- export
         irq                                : in std_logic_vector(2 downto 0); -- KEY1
 
         rx : in std_logic;
@@ -16,26 +16,26 @@ entity system_top is
         -- GENSOR_INT2  : in std_logic;
         GSENSOR_CS_n : out std_logic;
         GSENSOR_SCLK : out std_logic;
-        -- serial data input
-        GSENSOR_SDI : in std_logic;
-        -- serial data input and output
-        GSENSOR_SDO : out std_logic
+        -- serial data output to slave
+        GSENSOR_SDI : out std_logic;
+        -- serial data output from slave
+        GSENSOR_SDO : in std_logic
     );
 end entity;
 
 architecture rtl of system_top is
     component nios2_system is
         port (
-            clk_clk                            : in std_logic                    := 'X'; -- clk
-            pio_irq_external_connection_export : in std_logic_vector(2 downto 0) := (others => 'X'); -- export
+            clk_clk                            : in std_logic                    := '0'; -- clk
+            pio_irq_external_connection_export : in std_logic_vector(2 downto 0) := (others => '0'); -- export
             pio_led_external_connection_export : out std_logic_vector(9 downto 0); -- export
-            pio_sw_external_connection_export  : in std_logic_vector(9 downto 0) := (others => 'X'); -- export
-            reset_reset_n                      : in std_logic                    := 'X'; -- reset_n
-            spi_external_MISO                  : in std_logic                    := 'X'; -- MISO
+            pio_sw_external_connection_export  : in std_logic_vector(9 downto 0) := (others => '0'); -- export
+            reset_reset_n                      : in std_logic                    := '0'; -- reset_n
+            spi_external_MISO                  : in std_logic                    := '0'; -- MISO
             spi_external_MOSI                  : out std_logic; -- MOSI
             spi_external_SCLK                  : out std_logic; -- SCLK
             spi_external_SS_n                  : out std_logic; -- SS_n
-            uart_basic_uart_rx                 : in std_logic := 'X'; -- rx
+            uart_basic_uart_rx                 : in std_logic := '0'; -- rx
             uart_basic_uart_tx                 : out std_logic -- tx
         );
     end component nios2_system;
@@ -62,8 +62,8 @@ begin
             pio_sw_external_connection_export  => pio_sw_external_connection_export, --  pio_sw_external_connection.export
             reset_reset_n                      => arst_n, --                       reset.reset_n
 
-            spi_external_MISO  => GSENSOR_SDI, --                master in slave out
-            spi_external_MOSI  => GSENSOR_SDO, --                            master out slave in
+            spi_external_MISO  => GSENSOR_SDO, --                master in slave out
+            spi_external_MOSI  => GSENSOR_SDI, --                            master out slave in
             spi_external_SCLK  => GSENSOR_SCLK, --                            .SCLK
             spi_external_SS_n  => GSENSOR_CS_n, --                            .SS_n
             uart_basic_uart_rx => rx, --             uart_basic_uart.rx

@@ -5,12 +5,12 @@ use ieee.std_logic_1164.all;
 
 entity uart_tx is
   port (
-    clk           : in std_logic; -- 50 MHz system clock
-    arst_n        : in std_logic; -- Asynchronous active low reset
-    tx_data       : in std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
+    clk : in std_logic; -- 50 MHz system clock
+    arst_n : in std_logic; -- Asynchronous active low reset
+    tx_data : in std_logic_vector (7 downto 0); -- Input data to be transmitted on the RX line
     tx_data_valid : in std_logic; -- Valid data on tx_data. Start transmission.
-    tx_busy       : out std_logic; -- Module busy, transmission ongoing (active high)
-    tx            : out std_logic -- UART TX output
+    tx_busy : out std_logic; -- Module busy, transmission ongoing (active high)
+    tx : out std_logic -- UART TX output
   );
 end entity;
 
@@ -33,30 +33,33 @@ architecture rtl of uart_tx is
 begin
 
   tx_process : process (clk, arst_n) is
-  variable bit_cnt : unsigned(3 downto 0) := "0000";
+    variable bit_cnt : unsigned(3 downto 0) := "0000";
   begin
-    if rising_edge(clk) then
+
+    if arst_n = '0' then
+      tx_state <= SIdle;
+    elsif rising_edge(clk) then
       case tx_state is
         when SIdle =>
-          tx_busy  <= '0';
-          tx       <= '1';
+          tx_busy <= '0';
+          tx <= '1';
           baud_cnt <= "000000000";
-          tx_busy  <= '0';
-          bit_cnt  := "0000";
+          tx_busy <= '0';
+          bit_cnt := "0000";
           if tx_data_valid = '1' then
             tx_buffer <= '1' & tx_data & '0';
-            tx_state  <= STransmit;
-            tx_busy   <= '1';
+            tx_state <= STransmit;
+            tx_busy <= '1';
           end if;
 
         when STransmit =>
-          tx_busy  <= '1';
-          tx       <= tx_buffer(to_integer(bit_cnt));
+          tx_busy <= '1';
+          tx <= tx_buffer(to_integer(bit_cnt));
           baud_cnt <= baud_cnt + 1;
 
           if to_integer(baud_cnt) = bit_period then
             baud_cnt <= "000000000";
-            bit_cnt  := bit_cnt + 1;
+            bit_cnt := bit_cnt + 1;
           end if;
           if to_integer(bit_cnt) = 10 then
             tx_state <= SIdle;
@@ -64,8 +67,5 @@ begin
       end case;
     end if;
 
-    if arst_n = '0' then
-      tx_state <= SIdle;
-    end if;
   end process;
 end architecture;

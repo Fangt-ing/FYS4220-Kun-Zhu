@@ -1,45 +1,70 @@
 #include <stdio.h>
-#include "includes.h"
-#include <string.h>
-
+#include "system.h"                 //access Nios II system info
+#include "io.h"                     //access to IORD and IORW
+#include "unistd.h"                 //access to usleep
 #include "altera_avalon_pio_regs.h" //access to PIO macros
 #include <sys/alt_irq.h>            // access to the IRQ routines
 
+#include "includes.h"
+#include <string.h>
+
+// spi moduel
+#include "alt_types.h"
+#include "altera_avalon_spi.h"
+
 #define TASK_STACKSIZE 1024 // Number of 32 bit words (e.g. 8192 bytes)
-OS_STK task1_stk[TASK_STACKSIZE];
-OS_STK task2_stk[TASK_STACKSIZE];
+OS_STK uart_task_stk[TASK_STACKSIZE];
+OS_STK acc_task_stk[TASK_STACKSIZE];
 
-#define TASK1_PRIORITY 4
-#define TASK2_PRIORITY 5
+#define uart_task_priority 4
+#define acc_task_priority 5
 
-//Semaphore to protect the shared JTAG resource
-OS_EVENT *shared_jtag_sem;
+// //Semaphore to protect the shared JTAG resource
+// OS_EVENT *shared_jtag_sem;
+
+// semaphore to protect the shared UART resource
+OS_EVENT *tx_complete_sem;
 // synchronization semaphore
-OS_EVENT *shared_key1_sem;
+OS_EVENT *adxl345_sem;
+// semaphore/ message for mailbox
+OS_EVENT *msg_box;
 
 // global variable to hold the value of the edge capture register.
 volatile int edge_capture;
+volatile int uart_status;
 
+/* This is the ISR which will be called when the system signals an interrupt. */
 static void handle_interrupts(void *context)
 {
     // Cast context to edge_capture's type
     // Volatile to avoid compiler optimization
     // this will point to the edge_capture variable.
     volatile int *edge_capture_ptr = (volatile int *)context;
-    //Read the edge capture register on the PIO and store the value
-    //The value will be stored in the edge_capture variable and accessible
-    //from other parts of the code.
+
+    // Read the edge capture register on the PIO and store the value
+    // The value will be stored in the edge_capture variable and accessible
+    // from other parts of the code.
     *edge_capture_ptr = IORD_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE);
 
-    //Write to edge capture register to reset it
+    // Write to edge capture register to reset it
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE, 0);
-    // // Read the edge capture register on the PIO and store the value
-    // // The value will be stored in the edge_capture variable and accessible
-    // // from other parts of the code.
-    // *uart_status_ptr = IORD(UART_STATUS_BASE, 2);
-    // // Write to edge capture register to reset it
-    // IOWR(UART_STATUS_BASE, 2, 0);
-    OSSemPost(shared_key1_sem);
+
+    OSSemPost(adxl345_sem);
+}
+
+static void handle_interrupt_uart(void *context)
+{
+    // Cast context to edge_capture's type
+    // Volatile to avoid compiler optimization
+    // this will point to the edge_capture variable.
+    volatile int *uart_status_ptr = (volatile int *)context;
+
+    // Read the edge capture register on the PIO and store the value
+    // The value will be stored in the edge_capture variable and accessible
+    // from other parts of the code.
+    *uart_status_ptr = IORD(UART_BASIC_BASE, 2);
+    // Write to edge capture register to reset it
+    IOWR(UART_BASIC_BASE, 2, 0);
 }
 
 /* This function is used to initializes and registers the interrupt handler. */
@@ -55,88 +80,155 @@ static void init_interrupt_pio()
     // Reset the edge capture register
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE, 0);
 
+    // Register the interrupt handler in the system
+    // The ID and PIO_IRQ number is available from the system.h file.
+    alt_ic_isr_register(PIO_IRQ_IRQ_INTERRUPT_CONTROLLER_ID,
+                        PIO_IRQ_IRQ, handle_interrupts, edge_capture_ptr, 0x0);
+
     /* In order to keep the impact of interrupts on the execution of the main program to a minimum,
     it is important to keep interrupt routines short. If additional processing is necessary for a
     particular interrupt, it is better to do this outside of the ISR. E.g., checking the value
     of the edge_capture variable.*/
 
-    alt_ic_isr_register(PIO_IRQ_IRQ_INTERRUPT_CONTROLLER_ID,
-                        PIO_IRQ_IRQ, handle_interrupts, edge_capture_ptr, 0x0);
+    void *uart_status_ptr = (void *)&uart_status;
+    alt_ic_isr_register(UART_BASIC_IRQ_INTERRUPT_CONTROLLER_ID,
+                        UART_BASIC_IRQ, handle_interrupt_uart, uart_status_ptr, 0x0);
 }
 
-void task1(void *pdata)
+void uart_task(void *pdata)
 {
-    char text[] = "Hello from Task1\n";
-    int i;
-    alt_u8 error_code = OS_NO_ERR;
+    int sample_counter;
+    INT8U error_code = OS_NO_ERR;
+    int *data_ptr; // *msg_received;
+    alt_u8 data[8] = {0xe2, 0, 0, 0, 0, 0, 0, 0};
     while (1)
     {
-        // Collect semaphore before writing to JTAG UART
-        // wait for semaphore from interrupt handling routine before executing the taks
-        OSSemPend(shared_key1_sem, 0, &error_code);
-
-        // Collect semaphore before writing to JTAG UART
-        OSSemPend(shared_jtag_sem, 0, &error_code);
-        for (i = 0; i < strlen(text); i++)
+        //Get pointer to data from ADXL345
+        data_ptr = (int *)OSMboxPend(msg_box, 0, &error_code);
+        // pend the flag/ info from the mailbox
+        // msg_received = (int *)OSMboxPend(msg_box, 0, &error_code);
+        // Increase sample counter and add to second byte of array.
+        sample_counter++;
+        data[1] = sample_counter;
+        // Looping through the 6 bytes and sending over the UART
+        // will take some time. Copy data to local array to avoid overwriting from the accelerometer task.
+        for (int i = 0; i < 6; i++)
         {
-            putchar(text[i]);
+            data[i + 2] = *data_ptr;
+            data_ptr++;
         }
-        // Release semaphore
-        OSSemPost(shared_jtag_sem);
-        OSSemPost(shared_key1_sem);
-        //printf("Hello from task2\n");
-        OSTimeDlyHMSM(0, 0, 1, 20);
+        // Send bytes over UART and wait for TX complete semaphore for each byte transaction.
+        for (int i = 0; i < 8; i++)
+        {
+            IOWR(UART_BASIC_BASE, 0, data[i]);
+            OSSemPend(tx_complete_sem, 0, &error_code);
+        }
+        // for (i = 0; i < 8; i++)
+        // {
+        //     printf("uart iteration: %d\n", i);
+        //     IOWR(UART_BASIC_BASE, 0, *msg_received); // send/ write to uart tx
+        //     printf("Uart writing: %x\n\n", (unsigned int)msg_received);
+        //     msg_received++;                             // pointer increment every loop
+        //     OSSemPend(tx_complete_sem, 0, &error_code); // pend value to tx_complete
+        // }
     }
 }
 
-void task2(void *pdata)
+void acc_task(void *pdata)
 {
-    char text[] = "Thomas speaking!\n";
-    int i;
-    alt_u8 error_code = OS_NO_ERR;
+    INT8U error_code = OS_NO_ERR;
+    // tx and rx data buffers
+    alt_u8 spi_rx_data[8];
+    alt_u8 spi_tx_data[8];
+
+    //Read back ADXL345 device ID - reg 0
+    // bit 7: RnW
+    // bit 6: For multi byte reads or writes set to 1
+    // bit 5-0: register address
+    // To read device ID register send 0x80
+
+    // Configure SPI bit in DATA_FORMAT register ---------- from section 26: https://pages.github.uio.no/FYS4220/fys4220/project/project_nios2.html#spi-test
+    spi_tx_data[0] = 0x00 | 0x31; // Single byte write (cmd byte + 1 data byte) + register address
+    spi_tx_data[1] = 0x28;        // register data to write
+    alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
+
+    spi_tx_data[0] = 0x80; // address bit for spi protocol
+    // reading the device ID
+    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 1, spi_rx_data, 0);
+    printf("Device ID read: %x\n", spi_rx_data[0]);
+
+    // spi_tx_data[0] = 0x80 | 0x2c; // address bit for spi protocol '|' bitwise operation or.
+    // // reading the device ID
+    // alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 1, spi_rx_data, 0);
+    // printf("bw_rate_read: %x\n", spi_rx_data[0], spi_tx_data[0]);
+
+    spi_tx_data[0] = 0x2D; // address bits for power_ctrl
+    spi_tx_data[1] = 0x08; // the data bits of power_ctrl
+    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 0, spi_rx_data, 0);
+
+    spi_tx_data[0] = 0x2E; // address bits for INT_ENABLE
+    spi_tx_data[1] = 0x80; // the data bits of INT_ENABLE
+    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 0, spi_rx_data, 0);
+
+    spi_tx_data[0] = 0x2F; // address bits for INT_MAP
+    spi_tx_data[1] = 0x80; // the data bits of INT_MAP
+    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 0, spi_rx_data, 0);
+
+    spi_tx_data[0] = 0x98; // address bits for INT_SOURCE
+    spi_rx_data[0] = 0x80; // the data bits of INT_SOURCE
+    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 1, spi_rx_data, 0);
+
+    // alt_avalon_spi_command(SPI_BASE,
+    // 0, {always 0 as we are using have only 1 spi, and 0 slaves
+    // 1, spi_tx_data, {the value to be write to the
+    // 1, spi_rx_data, {the values to read}
+    // 0);
+
     while (1)
     {
-        // Collect semaphore before writing to JTAG UART
-        OSSemPend(shared_jtag_sem, 0, &error_code);
-        for (i = 0; i < strlen(text); i++)
-        {
-            putchar(text[i]);
-        }
-        // Release semaphore
-        OSSemPost(shared_jtag_sem);
-        //printf("Hello from task2\n");
-        OSTimeDlyHMSM(0, 0, 1, 4);
+        spi_tx_data[0] = 0x32; // address bits for DATAX0
+        OSSemPend(adxl345_sem, 0, &error_code);
+
+        // for (i = 0; i < 6; i++)
+        // {
+        alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 6, spi_rx_data, 0);
+        printf("acc data: %x\n\n", (unsigned int)spi_rx_data);
+        // *spi_tx_data++;
+        OSMboxPost(msg_box, (void *)spi_rx_data); // post to mail box
+        // }
     }
 }
 
 /* The main function creates two task and starts multi-tasking */
 int main(void)
 {
+    tx_complete_sem = OSSemCreate(0);
+    // synchronization semaphore, initialize semaphore unavailable
+    adxl345_sem = OSSemCreate(0);
+    // semaphore/ message for mailbox
 
-    //create JTAG semaphore and initialize to 1
-    shared_jtag_sem = OSSemCreate(1);
-    // create synchronization semaphore and initialize to 0
-    shared_key1_sem = OSSemCreate(0);
+    msg_box = OSMboxCreate((void *)NULL);
+    // create empty mail box
 
-    // initialize interrupt
+    // initialize interrupt, to handle semaphore
     init_interrupt_pio();
 
-    OSTaskCreateExt(task1,
+    OSTaskCreateExt(uart_task,
                     NULL,
-                    (void *)&task1_stk[TASK_STACKSIZE - 1],
-                    TASK1_PRIORITY,
-                    TASK1_PRIORITY,
-                    task1_stk,
+                    (void *)&uart_task_stk[TASK_STACKSIZE - 1],
+                    uart_task_priority,
+                    uart_task_priority,
+                    uart_task_stk,
                     TASK_STACKSIZE,
                     NULL,
                     0);
 
-    OSTaskCreateExt(task2,
+    OSTaskCreateExt(acc_task,
                     NULL,
-                    (void *)&task2_stk[TASK_STACKSIZE - 1],
-                    TASK2_PRIORITY,
-                    TASK2_PRIORITY,
-                    task2_stk,
+                    (void *)&acc_task_stk[TASK_STACKSIZE - 1],
+                    acc_task_priority,
+                    acc_task_priority,
+                    acc_task_stk,
                     TASK_STACKSIZE,
                     NULL,
                     0);

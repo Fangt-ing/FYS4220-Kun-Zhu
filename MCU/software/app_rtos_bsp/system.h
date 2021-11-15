@@ -4,7 +4,7 @@
  * Machine generated for CPU 'cpu' in SOPC Builder design 'nios2_system'
  * SOPC Builder design path: ../../quartus/nios2_system.sopcinfo
  *
- * Generated: Thu Nov 04 14:38:37 CET 2021
+ * Generated: Mon Nov 15 15:42:25 CET 2021
  */
 
 /*
@@ -325,8 +325,8 @@
 #define ALT_MODULE_CLASS_spi altera_avalon_spi
 #define SPI_BASE 0x81020
 #define SPI_CLOCKMULT 1
-#define SPI_CLOCKPHASE 0
-#define SPI_CLOCKPOLARITY 0
+#define SPI_CLOCKPHASE 1
+#define SPI_CLOCKPOLARITY 1
 #define SPI_CLOCKUNITS "Hz"
 #define SPI_DATABITS 8
 #define SPI_DATAWIDTH 16
