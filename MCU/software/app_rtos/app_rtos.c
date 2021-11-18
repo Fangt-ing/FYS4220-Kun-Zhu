@@ -49,7 +49,6 @@ static void handle_interrupts(void *context)
     { //KR: check for INT2 interrupt and post semaphore
         OSSemPost(adxl345_sem);
     }
-    
 }
 
 static void handle_interrupt_uart(void *context)
@@ -81,7 +80,7 @@ static void init_interrupt_pio()
 
     // Enable a single interrupt input by writing a one to the corresponding interruptmask bit locations
     // IOWR_ALTERA_AVALON_PIO_IRQ_MASK(PIO_IRQ_BASE, 0x1);
-    // KR: You have now also connected two additional interrupts (INT1 and INT2) to the PIO modules. 
+    // KR: You have now also connected two additional interrupts (INT1 and INT2) to the PIO modules.
     // You therefore need to also enable two addition bits in the MASK register.
     IOWR_ALTERA_AVALON_PIO_IRQ_MASK(PIO_IRQ_BASE, 0x7);
 
@@ -112,7 +111,7 @@ void uart_task(void *pdata)
     while (1)
     {
         //Get pointer to data from ADXL345
-        data_ptr = (alt_u8*)OSMboxPend(msg_box, 0, &error_code); //KR: you are receiving a pointer to an alt_u8 and not an int.
+        data_ptr = (alt_u8 *)OSMboxPend(msg_box, 0, &error_code); //KR: you are receiving a pointer to an alt_u8 and not an int.
         // Increase sample counter and add to second byte of array.
         sample_counter++;
         data[1] = sample_counter;
@@ -140,7 +139,7 @@ void acc_task(void *pdata)
     alt_u8 spi_rx_data[8];
     alt_u8 spi_tx_data[8];
 
-    // Configure SPI bit in DATA_FORMAT register ---------- 
+    // Configure SPI bit in DATA_FORMAT register ----------
     // from section 26: https://pages.github.uio.no/FYS4220/fys4220/project/project_nios2.html#spi-test
     spi_tx_data[0] = 0x00 | 0x31; // Single byte write (cmd bti + 1 data bit) + register address
     spi_tx_data[1] = 0x28;        // register data to write
@@ -164,7 +163,7 @@ void acc_task(void *pdata)
     alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
 
     spi_tx_data[0] = 0x80 | 0x30; // address bits for INT_SOURCE // KR: changed to correct address for INT SOURCE register
-    spi_rx_data[0] = 0x08; // the data bits of INT_SOURCE
+    spi_rx_data[0] = 0x08;        // the data bits of INT_SOURCE
     alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 1, spi_rx_data, 0);
     // printf("INT SOURCE register read: %x\n\n", spi_rx_data[0]);
 
@@ -173,6 +172,9 @@ void acc_task(void *pdata)
     // 1, spi_tx_data, {the value to be write to the
     // 1, spi_rx_data, {the values to read}
     // 0);
+
+    spi_tx_data[0] = 0xc0 | 0x32; // address bits for DATAX0 KR: Here you have to set the mulitiple byte bit to read 6 consecutive data bytes
+    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 6, spi_rx_data, 0);
 
     while (1)
     {
