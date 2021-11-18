@@ -180,10 +180,10 @@ void acc_task(void *pdata)
         OSSemPend(adxl345_sem, 0, &error_code);
 
         alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 6, spi_rx_data, 0);
-        printf("acc data: %x\n", (unsigned int)spi_rx_data);
+        // printf("acc data: %x\n", (unsigned int)spi_rx_data);
         // *spi_tx_data++;
         error_code = OSMboxPost(msg_box, (void *)spi_rx_data); // post to mail box
-        printf("err : %d\n",error_code);
+        // printf("err : %d\n",error_code);
     }
 }
 
