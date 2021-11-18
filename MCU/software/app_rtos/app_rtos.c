@@ -49,7 +49,12 @@ static void handle_interrupts(void *context)
     // Write to edge capture register to reset it
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE, 0);
 
-    OSSemPost(adxl345_sem);
+    // Write to edge capture register to reset it
+    IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE, 0);
+    if ((edge_capture >> 2) & 0x1)
+    { //KR: check for INT2 interrupt and post semaphore
+        OSSemPost(adxl345_sem);
+    }
 }
 
 static void handle_interrupt_uart(void *context)
@@ -65,6 +70,11 @@ static void handle_interrupt_uart(void *context)
     *uart_status_ptr = IORD(UART_BASIC_BASE, 2);
     // Write to edge capture register to reset it
     IOWR(UART_BASIC_BASE, 2, 0);
+
+    if ((uart_status >> 4) & 0x1)
+    { //KR: Check for tx complete IRQ and post semaphore.
+        OSSemPost(tx_complete_sem);
+    }
 }
 
 /* This function is used to initializes and registers the interrupt handler. */
@@ -75,7 +85,9 @@ static void init_interrupt_pio()
     void *edge_capture_ptr = (void *)&edge_capture;
 
     // Enable a single interrupt input by writing a one to the corresponding interruptmask bit locations
-    IOWR_ALTERA_AVALON_PIO_IRQ_MASK(PIO_IRQ_BASE, 0x1);
+    // IOWR_ALTERA_AVALON_PIO_IRQ_MASK(PIO_IRQ_BASE, 0x1);
+    // KR: You have now also connected two additional interrupts (INT1 and INT2) to the PIO modules. You therefore need to also enable two addition bits in the MASK register.
+    IOWR_ALTERA_AVALON_PIO_IRQ_MASK(PIO_IRQ_BASE, 0x7);
 
     // Reset the edge capture register
     IOWR_ALTERA_AVALON_PIO_EDGE_CAP(PIO_IRQ_BASE, 0);
@@ -97,14 +109,14 @@ static void init_interrupt_pio()
 
 void uart_task(void *pdata)
 {
-    int sample_counter;
+    alt_u8 sample_counter; //KR: initalize to 0 and should be of type alt_u8 since this is the type that is stored in the data array.
     INT8U error_code = OS_NO_ERR;
-    int *data_ptr; // *msg_received;
+    alt_u8 *data_ptr; // *msg_received; //KR: you are receiving a pointer to an alt_u8 and not an int.
     alt_u8 data[8] = {0xe2, 0, 0, 0, 0, 0, 0, 0};
     while (1)
     {
         //Get pointer to data from ADXL345
-        data_ptr = (int *)OSMboxPend(msg_box, 0, &error_code);
+        data_ptr = (alt_u8*)OSMboxPend(msg_box, 0, &error_code); //KR: you are receiving a pointer to an alt_u8 and not an int.
         // pend the flag/ info from the mailbox
         // msg_received = (int *)OSMboxPend(msg_box, 0, &error_code);
         // Increase sample counter and add to second byte of array.
@@ -148,7 +160,7 @@ void acc_task(void *pdata)
     // To read device ID register send 0x80
 
     // Configure SPI bit in DATA_FORMAT register ---------- from section 26: https://pages.github.uio.no/FYS4220/fys4220/project/project_nios2.html#spi-test
-    spi_tx_data[0] = 0x00 | 0x31; // Single byte write (cmd byte + 1 data byte) + register address
+    spi_tx_data[0] = 0x00 | 0x31; // Single byte write (cmd bti + 1 data bit) + register address
     spi_tx_data[1] = 0x28;        // register data to write
     alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
 
@@ -162,21 +174,22 @@ void acc_task(void *pdata)
     // alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 1, spi_rx_data, 0);
     // printf("bw_rate_read: %x\n", spi_rx_data[0], spi_tx_data[0]);
 
-    spi_tx_data[0] = 0x2D; // address bits for power_ctrl
-    spi_tx_data[1] = 0x08; // the data bits of power_ctrl
-    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 0, spi_rx_data, 0);
+    spi_tx_data[0] = 0x2F; // address bits for INT_MAP
+    spi_tx_data[1] = 0x80; // the data bits of INT_MAP
+    alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
 
     spi_tx_data[0] = 0x2E; // address bits for INT_ENABLE
     spi_tx_data[1] = 0x80; // the data bits of INT_ENABLE
-    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 0, spi_rx_data, 0);
+    alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
 
-    spi_tx_data[0] = 0x2F; // address bits for INT_MAP
-    spi_tx_data[1] = 0x80; // the data bits of INT_MAP
-    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 0, spi_rx_data, 0);
+    spi_tx_data[0] = 0x2D; // address bits for power_ctrl
+    spi_tx_data[1] = 0x08; // the data bits of power_ctrl
+    alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
 
-    spi_tx_data[0] = 0x98; // address bits for INT_SOURCE
-    spi_rx_data[0] = 0x80; // the data bits of INT_SOURCE
-    alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 1, spi_rx_data, 0);
+    spi_tx_data[0] = 0x80 | 0x30; // address bits for INT_SOURCE // KR: changed to correct address for INT SOURCE register
+    spi_rx_data[0] = 0x08; // the data bits of INT_SOURCE
+    alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 1, spi_rx_data, 0);
+    printf("INT SOURCE register read: %x\n\n", spi_rx_data[0]); //
 
     // alt_avalon_spi_command(SPI_BASE,
     // 0, {always 0 as we are using have only 1 spi, and 0 slaves
@@ -186,13 +199,13 @@ void acc_task(void *pdata)
 
     while (1)
     {
-        spi_tx_data[0] = 0x32; // address bits for DATAX0
+        spi_tx_data[0] = 0xc0 | 0x32; // address bits for DATAX0 KR: Here you have to set the mulitiple byte bit to read 6 consecutive data bytes
         OSSemPend(adxl345_sem, 0, &error_code);
 
         // for (i = 0; i < 6; i++)
         // {
         alt_avalon_spi_command(SPI_BASE, 0, 1, spi_tx_data, 6, spi_rx_data, 0);
-        printf("acc data: %x\n\n", (unsigned int)spi_rx_data);
+        printf("acc data: %x\n", (unsigned int)spi_rx_data);
         // *spi_tx_data++;
         OSMboxPost(msg_box, (void *)spi_rx_data); // post to mail box
         // }

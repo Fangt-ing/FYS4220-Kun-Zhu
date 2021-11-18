@@ -126,6 +126,7 @@ begin
             status(3) <= rx_err;
             status(4) <= tx_irq;
             status(5) <= rx_irq;
+            status(31 downto 6) <= (others => '0'); -- set other values to 0 to avoid latching warining.
             -- assign either irq to irq connected to CPU.
             irq <= tx_irq or rx_irq;
             -- enable cpu --write--> to processor interface @ addr "00"
@@ -162,7 +163,7 @@ begin
                 tx_irq <= '1';
             end if;
 
-            if rx_busy_temp = '1' and tx_busy = '0' then
+            if rx_busy_temp = '1' and rx_busy = '0' then
                 -- whenever there's a falling edge, uart interrupts the CPU
                 rx_irq <= '1';
             end if;
