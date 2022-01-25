@@ -141,7 +141,7 @@ void acc_task(void *pdata)
 
     // Configure SPI bit in DATA_FORMAT register ----------
     // from section 26: https://pages.github.uio.no/FYS4220/fys4220/project/project_nios2.html#spi-test
-    spi_tx_data[0] = 0x00 | 0x31; // Single byte write (cmd bti + 1 data bit) + register address
+    spi_tx_data[0] = 0x00 | 0x31; // Single byte write (cmd bit + 1 data bit) + register address
     spi_tx_data[1] = 0x28;        // register data to write
     alt_avalon_spi_command(SPI_BASE, 0, 2, spi_tx_data, 0, spi_rx_data, 0);
 

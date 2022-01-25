@@ -50,3 +50,7 @@ The software is based on an SPI protocol. Details at ADXL345 datasheet <https://
 The final part is to read data from the onboard accelerometer via SPI protocol, then send the data to PC via UART (designed from previous UART task) protocol.
 There is also a video record showing capturing the UART signal patterns.
 The board Intel MAX10 FPGA device overview: <https://www.intel.com/content/dam/www/programmable/us/en/pdfs/literature/hb/max-10/m10_overview.pdf>
+
+[![Oscilloscope UART](https://i.ytimg.com/vi/vsqV-TBsPkU/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDpjyJeKobQRLvulQ-Y_02PltN7vw)](https://youtu.be/vsqV-TBsPkU "Little red riding hood - Click to Watch!")
+
+<!-- https://www.youtube.com/watch?v=vsqV-TBsPkU&list=PL6vG9hHGoJwcALi_uRcOBhlD3OCpoRLbh&index=1 -->

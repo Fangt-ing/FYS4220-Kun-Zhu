@@ -9,12 +9,12 @@ architecture bench of uart_tx_tb is
 
   component uart_tx
     port (
-      clk           : in std_logic;
-      arst_n        : in std_logic                     := '0';
-      tx_data       : in std_logic_vector (7 downto 0) := "01111010";
-      tx_data_valid : in std_logic                     := '0';
-      tx_busy       : out std_logic                    := '0';
-      tx            : out std_logic
+      clk : in std_logic;
+      arst_n : in std_logic := '0';
+      tx_data : in std_logic_vector (7 downto 0) := "01111010";
+      tx_data_valid : in std_logic := '0';
+      tx_busy : out std_logic := '0';
+      tx : out std_logic
     );
   end component;
 
@@ -23,24 +23,24 @@ architecture bench of uart_tx_tb is
   -- Generics
 
   -- Ports
-  signal clk           : std_logic;
-  signal arst_n        : std_logic := '0';
-  signal tx_data       : std_logic_vector (7 downto 0);
+  signal clk : std_logic;
+  signal arst_n : std_logic := '0';
+  signal tx_data : std_logic_vector (7 downto 0);
   signal tx_data_valid : std_logic;
-  signal tx_busy       : std_logic;
-  signal tx            : std_logic;
+  signal tx_busy : std_logic;
+  signal tx : std_logic;
   -- signal tx_buffer : std_logic_vector(9 downto 0) := '1' & tx_data & '0';
   signal clk_ena : boolean := false;
 begin
 
   tx_inst : uart_tx
   port map(
-    clk           => clk,
-    arst_n        => arst_n,
-    tx_data       => tx_data,
+    clk => clk,
+    arst_n => arst_n,
+    tx_data => tx_data,
     tx_data_valid => tx_data_valid,
-    tx_busy       => tx_busy,
-    tx            => tx
+    tx_busy => tx_busy,
+    tx => tx
   );
 
   clk <= not clk after clk_period/2 when clk_ena else '0';
@@ -56,9 +56,9 @@ begin
     tx_data_valid <= '1';
     wait for clk_period; -- wait for one bit_period.
     tx_data_valid <= '0';
-    wait for clk_period * 434 *11;
+    wait for clk_period * 434 * 11;
 
-    arst_n  <= '0';
+    arst_n <= '0';
     clk_ena <= false;
     wait;
   end process;

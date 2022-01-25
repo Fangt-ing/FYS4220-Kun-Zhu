@@ -23,6 +23,8 @@ architecture rtl of uart_tx is
 
   signal baud_cnt : unsigned(8 downto 0) := "000000000";
 
+  --2^8=256<434 (= baud_cnt = bit_period)<2^9=512
+
   -- signal bit_cnt : unsigned(3 downto 0) := "0000"; -- enables the bit to count up in the register
   -- baudrate = 115200 bits/s, then 1 bit period = 1/115200 = 8.68 us
   -- constant bit_period : time := 8.68 us --> bit_period = time/clk = 434 times of changes
