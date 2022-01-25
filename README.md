@@ -58,5 +58,5 @@ The board Intel MAX10 FPGA device overview: <https://www.intel.com/content/dam/w
 ## Oscilloscope catching UART signal
 
 <a href="https://youtu.be/vsqV-TBsPkU" target="_blank">
- <img src="https://i.ytimg.com/vi/vsqV-TBsPkU/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDpjyJeKobQRLvulQ-Y_02PltN7vw" alt="Watch the video" style="max-width: 100%; height: 40%;" border="3" />
+ <img src="https://i.ytimg.com/vi/vsqV-TBsPkU/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDpjyJeKobQRLvulQ-Y_02PltN7vw" alt="Watch the video" style="max-width: 100%; height: 50%;" border="3" />
 </a>
