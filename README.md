@@ -1,4 +1,4 @@
-# FYS4200 study project - Kun
+# Real Time and Embedded Data Systems - FYS4200 study project - Kun
 
 This is a study project for master course FYS4200.
 Author: Kun Zhu
